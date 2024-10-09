@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS</title>
+</head>
+<body>
+
+<canvas id="os" width="1400" height="800" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML canvas tag.</canvas>
+
+<script>
+    var canvas = document.getElementById("os");
+    var ctx = canvas.getContext("2d");
+    var clickableElements = [];
+    ctx.font = "30px Arial";
+    function createClick(x, y, width, height, clicked){
+        clickableElements.push({x:x, y:y, width:width, height:height, code:clickableElements.length, functionOnClicked:clicked});
+    };
+    canvas.addEventListener('click', function(event) {
+        const rect = canvas.getBoundingClientRect(); // Get canvas bounds
+        const mouseX = event.clientX - rect.left; // Mouse X position relative to canvas
+        const mouseY = event.clientY - rect.top; // Mouse Y position relative to canvas
+        clickableElements.forEach((el) => {
+        if (mouseX > el.x && mouseX < el.x + el.width && mouseY > el.y && mouseY < el.y + el.height) {
+            el.functionOnClicked();
+        }
+        });
+    });
+    if (!localStorage.OSBooted) {
+        ctx.rect(10,15,300,200);
+        ctx.stroke();
+        ctx.fillText("Welcome To", 80, 50);
+        ctx.font = "50px Arial";
+        ctx.fillText("VishnuOS", 50, 100);
+        ctx.fillStyle = "grey";
+        ctx.fillRect(105, 150, 100, 40);
+        ctx.rect(105, 150, 100, 40);
+        ctx.stroke();
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Tutorial", 120, 177);
+        createClick(105, 150, 100, 40, (click) => {
+            ctx.clearRect(0, 0, 1000, 1000);
+        });
+    }
+</script>
+
+</body>
+</html>
+
