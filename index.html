@@ -7,13 +7,15 @@
 </head>
 <body>
 
-<canvas id="os" width="1400" height="800" style="border:1px solid #d3d3d3;">
+<img id="star" width="200" height="220" src="assets/star.png" hidden>
+<canvas id="os" width="1450" height="789" tabindex='1'>
 Your browser does not support the HTML canvas tag.</canvas>
 
 <script>
     var canvas = document.getElementById("os");
     var ctx = canvas.getContext("2d");
     var clickableElements = [];
+    var windows = [];
     ctx.font = "30px Arial";
     function createClick(x, y, width, height, clicked){
         clickableElements.push({x:x, y:y, width:width, height:height, code:clickableElements.length, functionOnClicked:clicked});
@@ -28,22 +30,103 @@ Your browser does not support the HTML canvas tag.</canvas>
         }
         });
     });
+    function createButton(x, y, width, height, title){
+        ctx.fillStyle = "grey";
+        ctx.fillRect(x, y, width, height);
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
+        const textMetrics = ctx.measureText(title);
+        const textWidth = textMetrics.width;
+        ctx.fillText(title, x + (width - textWidth) / 2, y + (height + parseInt(ctx.font, 10)) / 2 - 5);
+    };
+    function createOnClickButton(x, y, width, height, title, onClick){
+        createButton(x, y, width, height, title);
+        createClick(x, y, width, height, onClick);
+    };
+    function Window1(x, y, width, height, title, win){
+        ctx.rect(x, y, width, height);
+        ctx.stroke();
+        ctx.rect(x, y, width, 30);
+        ctx.stroke();
+        ctx.fillText(title, x+10, y+25);
+        ctx.fillText("-", x+width-90, y+25);
+        ctx.fillText("x", x+width-30, y+25);
+        ctx.fillText("■", x+width-60, y+25);
+        createClick(x+width-90, y, 10, 30, ()=>{
+            console.log("-");
+        });
+        createClick(x+width-30, y, 10, 30, ()=>{
+            windows.splice(win.id, 1);
+            ctx.clearRect(x, y, width+1, height+1);
+        });
+        createClick(x+width-60, y, 10, 30, ()=>{
+            console.log("BOX");
+        });
+    };
+    function Game(name){
+        ctx.clearRect(0, 0, 900, 700);
+        win = {name:name, layer:windows.length, id:windows.length};
+        windows.push(win);
+        Window1(0, 0, 900, 700, "Hello", win);
+    };
     if (!localStorage.OSBooted) {
+        localStorage.OSBooted = true;
         ctx.rect(10,15,300,200);
         ctx.stroke();
         ctx.fillText("Welcome To", 80, 50);
         ctx.font = "50px Arial";
         ctx.fillText("VishnuOS", 50, 100);
+        createOnClickButton(105, 150, 100, 40, "Tutorial", (click) => {
+            ctx.clearRect(0, 0, 1000, 1000);
+            ctx.fillText("No thank you. Just go back", 40, 50);
+            createOnClickButton(80, 100, 100, 40, "Go Back", (click) => {
+                localStorage.OSBooted = false;
+                window.location.reload();
+            });
+        });
+    }else {
+        var _ImageData;
+        window.addEventListener("keydown", (event)=>{
+            if(event.keyCode == 89){
+                if (_ImageData) {
+                    ctx.putImageData(_ImageData, 0, 0);
+                    _ImageData = 0;
+                }else {
+                    _ImageData = ctx.getImageData(0, 0, 1300, 730);
+                    ctx.clearRect(0, 0, 1300, 730);
+                    var x = 50, y = 50;
+                    windows.forEach((item) => {
+                        ctx.rect(x, y, 100, 100);
+                        ctx.fillText(item.name, x+5, y + 25);
+                        ctx.stroke();
+                        x += 50;
+                    });
+                }
+            };
+        });
         ctx.fillStyle = "grey";
-        ctx.fillRect(105, 150, 100, 40);
-        ctx.rect(105, 150, 100, 40);
-        ctx.stroke();
+        ctx.fillRect(0, 750, 1400, 60);
+        const d = new Date();
+        const year = 1000 * 60 * 60 * 24 * 365;
+        let years = Math.round(d.getTime() / year);
         ctx.font = "20px Arial";
         ctx.fillStyle = "black";
-        ctx.fillText("Tutorial", 120, 177);
-        createClick(105, 150, 100, 40, (click) => {
-            ctx.clearRect(0, 0, 1000, 1000);
+        date = (d.getMonth() + 1) + "/" + (d.getDate()) + "/"+String(years + 1969).substring(2);
+        ctx.fillText(date, 10, 780);
+        // createClick(10, 780, ctx.measureText(date).width, 50, (event) => {
+        //     console.log("HII");
+        // });
+        createClick(0, 740, 110, 50, (event) => {
+            console.log("Opening the time");
         });
+
+        document.getElementById("star").addEventListener("load", (e) => {
+            ctx.drawImage(document.getElementById("star"), 120, 743, 48, 48);
+            createClick(120, 743, 48, 48, ()=>{
+                Game("RedGame");
+            });
+        })
+        console.log(ctx.measureText(date).width);
     }
 </script>
 
