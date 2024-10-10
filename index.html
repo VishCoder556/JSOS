@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OS</title>
 </head>
-<body>
+<body oncontextmenu="return false">
 
 <img id="star" width="200" height="220" src="assets/star.png" hidden>
 <canvas id="os" width="1450" height="789" tabindex='1'>
@@ -43,6 +43,40 @@ Your browser does not support the HTML canvas tag.</canvas>
         createButton(x, y, width, height, title);
         createClick(x, y, width, height, onClick);
     };
+    function Setup(x, y, width, height, title, win){
+        if (win.name == "RedGame"){
+            ctx.font = "80px Roboto";
+            ctx.fillText("Games", x, y+100);
+            ctx.font = "20px Arial";
+        };
+    };
+    function MoveLeft(layer){
+        if (layer == -1 && layer < windows.length){
+            if (windows.length != 1) {
+                layer = windows.length-1;
+            }else{
+                layer = 1;
+            }
+        };
+        windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
+        if(layer > 0){
+            ctx.putImageData(windows[layer-1].ImageData, 0, 40);
+        }
+        if (layer-1 != -1) {
+        layer--;
+        }
+        return layer;
+    };
+    function MoveRight(layer){
+        if (layer != -1 && layer < windows.length){
+            windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
+            if (layer + 1 != windows.length) {
+                ctx.putImageData(windows[layer+1].ImageData, 0, 40);
+                layer++;
+            }
+        }
+        return layer;
+    };
     function Window1(x, y, width, height, title, win){
         clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":120,\"y\":743,\"width\":48,\"height\":48,\"code\":1}]");
         clickableElements[0].functionOnClicked = (event) => {
@@ -51,6 +85,7 @@ Your browser does not support the HTML canvas tag.</canvas>
         clickableElements[1].functionOnClicked = (event) => {
             Game("RedGame");
         };
+        Setup(x, y, width, height, title, win);
         win.ImageData = ctx.getImageData(x, y, width, height);
         ctx.rect(x, y, width, height);
         ctx.stroke();
@@ -63,16 +98,18 @@ Your browser does not support the HTML canvas tag.</canvas>
         ctx.fillText("■", x+width-60, y+25);
         win.ImageData = ctx.getImageData(x, y, width, height);
         createClick(x+width-90, y, 10, 30, ()=>{
-            console.log("-");
+            if (layer == 0){
+                layer = MoveRight(win.layer);
+            }else {
+                layer = MoveLeft(win.layer);
+            };
         });
         createClick(x+width-30, y, 10, 30, ()=>{
-            console.log(windows);
             win.ImageData = ctx.getImageData(x, y, width, height);
             windows = windows.filter((_, index) => index !== win.id);;
             ctx.clearRect(x, y, width+1, height+1);
             ctx.fillStyle = "white";
             // ctx.clearRect(windows.length * 100, 30, ctx.measureText(winname).width(), 30);
-            console.log(ctx.measureText(win.winname));
             ctx.clearRect(windows.length * 100, 0, ctx.measureText(win.winname).width, 30);
             ctx.fillStyle = "black";
             ctx.fillRect(windows.length * 100, 0, ctx.measureText(win.winname).width+2, 30);
@@ -100,7 +137,8 @@ Your browser does not support the HTML canvas tag.</canvas>
         ctx.fillText("VishnuOS", 50, 100);
         createOnClickButton(105, 150, 100, 40, "Tutorial", (click) => {
             ctx.clearRect(0, 0, 1000, 1000);
-            ctx.fillText("No thank you. Just go back. At least you learned that Ctrl-Y opens the view to see your windows! Also Esc brings you to the page mode where you can choose your page and can go back by pressing p", 40, 50);
+            ctx.fillText("No thank you. Just go back. At least you learned that Ctrl-Y opens the view to see your windows! Also Esc brings you to the page mode where you can choose", 40, 50, 2000);
+            ctx.fillText("your page and can go back by pressing p.", 40, 80, 2000);
             createOnClickButton(80, 100, 100, 40, "Go Back", (click) => {
                 localStorage.OSBooted = false;
                 window.location.reload();
@@ -111,6 +149,24 @@ Your browser does not support the HTML canvas tag.</canvas>
         var mode = 0;
         var layer = -1;
         ctx.fillRect(0, 0, 1700, 40);
+        document.onkeydown = (e) => {
+            if (e.key == 123) {
+                e.preventDefault();
+            }
+            if (e.ctrlKey && e.shiftKey && e.key == 'I') {
+                e.preventDefault();
+            }
+            if (e.ctrlKey && e.shiftKey && e.key == 'C') {
+                e.preventDefault();
+            }
+            if (e.ctrlKey && e.shiftKey && e.key == 'J') {
+                e.preventDefault();
+            }
+            if (e.ctrlKey && e.key == 'U') {
+                e.preventDefault();
+            }
+        };
+
         window.addEventListener("keydown", (event)=>{
             if(event.keyCode == 89){
                 if (_ImageData) {
@@ -132,24 +188,9 @@ Your browser does not support the HTML canvas tag.</canvas>
             }else if(event.keyCode==80 && mode == 1){
                 mode = 0;
             }else if(event.keyCode == 39 && mode == 1){ // Right
-                if (layer != -1 && layer < windows.length){
-                    console.log("HI");
-                    windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
-                    ctx.putImageData(windows[layer+1].ImageData, 0, 40);
-                    layer++;
-                }
+                layer = MoveRight(layer);
             }else if(event.keyCode == 37 && mode == 1){ // Left
-                if (layer == -1 && layer < windows.length){
-                    if (windows.length != 1) {
-                        layer = windows.length-1;
-                    }else{
-                        layer = 1;
-                    }
-                };
-                console.log(windows[layer].ImageData, windows[layer-1].ImageData);
-                windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
-                ctx.putImageData(windows[layer-1].ImageData, 0, 40);
-                layer--;
+                layer = MoveLeft(layer);
             }else{
                 console.log(event.keyCode);
             };
