@@ -8,8 +8,10 @@
 <body oncontextmenu="return false">
 
 <img id="star" width="200" height="220" src="assets/star.png" hidden>
+<img id="login" width="200" height="220" src="assets/login.png" hidden>
 <canvas id="os" width="1450" height="789" tabindex='1'>
-Your browser does not support the HTML canvas tag.</canvas>
+    Your browser does not support the HTML canvas tag.</canvas>
+    <div id="List"></div>
 
 <script>
     var canvas = document.getElementById("os");
@@ -43,11 +45,171 @@ Your browser does not support the HTML canvas tag.</canvas>
         createButton(x, y, width, height, title);
         createClick(x, y, width, height, onClick);
     };
+    var inputNum = 0;
+    function addInput(x, y, id=0) {
+
+    var input = document.createElement('input');
+
+    input.type = 'text';
+    input.style.position = 'absolute';
+    input.style.left = (x - 4) + 'px';
+    input.style.top = (y - 4) + 'px';
+    if (!id) {
+        input.id = inputNum + "Id";
+    }else {
+        input.id = id;
+    }
+    inputNum++;
+
+    input.onkeydown = handleEnter;
+
+    document.getElementById("List").appendChild(input);
+
+    // input.focus();
+
+    hasInput = true;
+    }
+
+    //Key handler for input box:
+    function handleEnter(e) {
+    var keyCode = e.keyCode;
+    if (keyCode === 13) {
+        drawText(this.value, parseInt(this.style.left, 10), parseInt(this.style.top, 10));
+        document.body.removeChild(this);
+        hasInput = false;
+    }
+    }
+
+    //Draw the text onto canvas:
+    function drawText(txt, x, y) {
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+    ctx.font = font;
+    ctx.fillText(txt, x - 4, y - 4);
+    }
+    function CreateDropDown(x, y){
+        // Create Select
+        select = document.createElement("select");
+        select.style.position = 'absolute';
+        select.style.left = (x - 4) + 'px';
+        select.style.top = (y - 4) + 'px';
+        select.id = inputNum+"Id";
+        inputNum++;
+        return select;
+    };
+
+    change = [inputNum];
+    function CustomerDifficultyLogin(x, y, method){
+        ctx.fillText("We're sorry to hear that! Please tell us about your experience.", x, y+350);
+        change.push(inputNum);
+        addInput(x+450, y+350, "CustomerDifficulty");
+        createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
+            send_to = "Vishnu Ramesh";
+            if (method == "TVA"){
+                send_to = "Joseph Mattucci";
+            };
+            ctx.fillText("To "+send_to+",", x, y+500, 1450);
+            ctx.fillText("  I have a problem with "+method+". My name is ____.", x, y+520, 1450);
+            ctx.fillText("  My problem is that "+document.getElementById("CustomerDifficulty").value+".", x, y+540, 1450);
+            ctx.fillText("  Please try to fix it! ", x, y+560, 1450);
+            if (send_to == "Vishnu Ramesh") {
+            ctx.fillText("  Email this to vishnuram9120@k12.ipsd.org", x, y+580, 1450);
+            }else if (send_to == "Joseph Mattucci") {
+            ctx.fillText("  Email this to josephmat9428@k12.ipsd.org", x, y+580, 1450);
+            }
+            email_prompt = "To "+send_to+", \n  I have a problem with "+method+". My name is ____.\n  My problem is that "+document.getElementById("CustomerDifficulty").value+".\n  Please try to fix it! ";
+            createOnClickButton(x, y+590, 100, 40, "Copy", (send)=>{
+                navigator.clipboard.writeText(email_prompt);
+            })
+        });
+    };
+
+    function LoginApp(x, y, method){
+        ctx.font = "20px Arial";
+        ctx.fillText("Please fill out the following form", x, y+200);
+        ctx.font = "15px Arial";
+        ctx.fillText("What is your purpose of coming here? ", x+20, y+300);
+        select1 = CreateDropDown(x+300, y+300);
+        select1.innerHTML = "<option value=1>Customer Difficulty</option><option value=2>Enrollment</option><option value=3>Contract</option>";
+        change = []
+        CustomerDifficultyLogin(x, y, method)
+        select1.addEventListener("change", (event)=>{
+            // ctx.clearRect(x+2, y+250, 500, 80);
+            // if (change.length != 1) {
+                change.forEach((item) => {
+                    if (document.getElementById((item) + "Id") != null) {
+                        console.log(item, document.getElementById((item) + "Id"));
+                        document.getElementById("List").removeChild(document.getElementById((item) + "Id"));
+                    }
+                });
+            // }
+            ctx.clearRect(x+1, y+310, 1000, 200);
+            // ctx.clearRect(x, y+380, 200, 300);
+            for (i=0;i<=clickableElements.length; i++){
+                if (clickableElements[i]) {
+                    if (clickableElements[i].x == x && clickableElements[i].y == y+380 && clickableElements[i].width==100 && clickableElements[i].width==40) {
+                        console.log("Hi");
+                        clickableElements.splice(i, 1);
+                    }
+                }
+            };
+            if (select1.value == 1){
+                change.push(inputNum);
+                CustomerDifficultyLogin(x, y, method)
+            }else if (select1.value == 2){
+                ctx.fillText("Tell me something good about you that could help us. Be short in your description.", x+1, y+350);
+                // change.add(inputNum);
+                addInput(x+560, y+350, "GoodLogin");
+                createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
+                    // document.getElementById("GoodLogin").value;
+                    send_to = "Vishnu Ramesh";
+                    if (method == "TVA"){
+                        send_to = "Joseph Mattuci";
+                    };
+                    ctx.fillText("To "+send_to+",", x, y+500, 1450);
+                    ctx.fillText("  I want to enroll into "+method+". My name is ____.", x, y+520, 1450);
+                    ctx.fillText("  One thing that is good about me is that I can "+document.getElementById("GoodLogin").value+".", x, y+540, 1450);
+                    ctx.fillText("  Please respond with a location to meet! ", x, y+560, 1450);
+                    if (send_to == "Vishnu Ramesh") {
+                    ctx.fillText("  Email this to vishnuram9120@k12.ipsd.org", x, y+580, 1450);
+                    }else if (send_to == "Joseph Mattucci") {
+                    ctx.fillText("  Email this to josephmat9428@k12.ipsd.org", x, y+580, 1450);
+                    }
+                    email_prompt = "To "+send_to+", \n  I want to enroll into "+method+". My name is ____.\n  One thing that is good about me is that I can "+document.getElementById("GoodLogin").value+"\n  Please respond with a location to meet! ";
+                    createOnClickButton(x, y+590, 100, 40, "Copy", (send)=>{
+                        navigator.clipboard.writeText(email_prompt);
+                    })
+                });
+            }else if (select1.value == 3){
+                ;
+            };
+        });
+        document.getElementById("List").appendChild(select1);
+    };
     function Setup(x, y, width, height, title, win){
         if (win.name == "RedGame"){
             ctx.font = "80px Roboto";
             ctx.fillText("Games", x, y+100);
             ctx.font = "20px Arial";
+        }else if(win.name == "Login"){
+            ctx.fillText("Login", x, y+100);
+            // Create Select
+            select = CreateDropDown(x+20, y+150)
+            select.innerHTML = "<option value=0 selected>None</option><option value=1>TVA</option><option value=2>Epic Games</option>";
+            document.getElementById("List").appendChild(select);
+            select.addEventListener("change", (event)=>{
+                document.getElementById("List").innerHTML = "";
+                document.getElementById("List").appendChild(select);
+                if (select.value == 1){
+                    LoginApp(x, y, "TVA");
+                }else if (select.value == 2){
+                    LoginApp(x, y, "EpicGames");
+                }else {
+                    select.value = 2;
+                };
+                // addInput(x+50, y+200);
+            });
+            // Add input
         };
     };
     function MoveLeft(layer){
@@ -133,12 +295,15 @@ Your browser does not support the HTML canvas tag.</canvas>
         });
     };
     function Window1(x, y, width, height, title, win){
-        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":120,\"y\":743,\"width\":48,\"height\":48,\"code\":1}]");
+        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":120,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":180,\"y\":747,\"width\":40,\"height\":40,\"code\":2}]");
         clickableElements[0].functionOnClicked = (event) => {
             console.log("Opening the time");
         };
         clickableElements[1].functionOnClicked = (event) => {
             Game("RedGame");
+        };
+        clickableElements[2].functionOnClicked = (event) => {
+            Game("Login");
         };
         Setup(x, y, width, height, title, win);
         win.ImageData = ctx.getImageData(x, y, width, height);
@@ -161,6 +326,7 @@ Your browser does not support the HTML canvas tag.</canvas>
         });
         createClick(x+width-30, y, 10, 30, ()=>{
             CloseWindow(win, x, y, width, height);
+            document.getElementById("List").innerHTML = "";
         });
         createClick(x+width-60, y, 10, 30, ()=>{
             console.log("BOX");
@@ -216,13 +382,21 @@ Your browser does not support the HTML canvas tag.</canvas>
         };
 
         window.addEventListener("keydown", (event)=>{
-            if(event.keyCode == 89){
+            if(event.keyCode == 89 && event.ctrlKey){
                 if (_ImageData) {
                     ctx.putImageData(_ImageData, 0, 0);
+                    for (i=0; i<=inputNum-1; i++){
+                        console.log(document.getElementById(i+"Id"));
+                        document.getElementById(i+"Id").removeAttribute("hidden");
+                    };
                     _ImageData = 0;
                 }else {
                     _ImageData = ctx.getImageData(0, 0, 1700, 930);
                     ctx.clearRect(0, 0, 1700, 930);
+                    for (i=0; i<=inputNum-1; i++){
+                        console.log(document.getElementById(i+"Id"));
+                        document.getElementById(i+"Id").hidden = "true";
+                    };
                     var x = 50, y = 50;
                     windows.forEach((item) => {
                         ctx.rect(x, y, 100, 100);
@@ -263,6 +437,13 @@ Your browser does not support the HTML canvas tag.</canvas>
             ctx.drawImage(document.getElementById("star"), 120, 743, 48, 48);
             createClick(120, 743, 48, 48, ()=>{
                 Game("RedGame");
+            });
+        })
+
+        document.getElementById("login").addEventListener("load", (e) => {
+            ctx.drawImage(document.getElementById("login"), 180, 747, 40, 40);
+            createClick(180, 747, 40, 40, ()=>{
+                Game("Login");
             });
         })
     }
