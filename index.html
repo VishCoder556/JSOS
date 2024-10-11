@@ -65,6 +65,23 @@ Your browser does not support the HTML canvas tag.</canvas>
         if (layer-1 != -1) {
         layer--;
         }
+
+        clickableElements.splice(2);
+        x = 0, y=40, width=1400, height=700;
+                win = windows[layer];
+                createClick(x+width-90, y, 10, 30, ()=>{
+                    if (layer == 0){
+                        layer = MoveRight(win.layer);
+                    }else {
+                        layer = MoveLeft(win.layer);
+                    };
+                });
+                createClick(x+width-30, y, 10, 30, ()=>{
+                    CloseWindow(win, x, y, width, height);
+                });
+                createClick(x+width-60, y, 10, 30, ()=>{
+                    console.log("BOX");
+                });
         return layer;
     };
     function MoveRight(layer){
@@ -73,9 +90,47 @@ Your browser does not support the HTML canvas tag.</canvas>
             if (layer + 1 != windows.length) {
                 ctx.putImageData(windows[layer+1].ImageData, 0, 40);
                 layer++;
+                clickableElements.splice(2);
+                win = windows[layer];
+                x = 0, y=40, width=1400, height=700;
+                createClick(x+width-90, y, 10, 30, ()=>{
+                    if (layer == 0){
+                        layer = MoveRight(win.layer);
+                    }else {
+                        layer = MoveLeft(win.layer);
+                    };
+                });
+                createClick(x+width-30, y, 10, 30, ()=>{
+                    CloseWindow(win, x, y, width, height);
+                });
+                createClick(x+width-60, y, 10, 30, ()=>{
+                    console.log("BOX");
+                });
             }
         }
         return layer;
+    };
+    function CloseWindow(win, x, y, width, height){
+        win.ImageData = ctx.getImageData(x, y, width, height);
+        windows = windows.filter((_, index) => index !== win.id);
+        ctx.clearRect(x, y, width+1, height+1);
+        ctx.fillStyle = "white";
+        for (let i = windows.length - 1; i >= 0; i--) {
+            if (windows[i] === 0) {
+                windows.splice(i, 1); // Remove element at index i
+            }
+        }
+        // ctx.clearRect(windows.length * 100, 30, ctx.measureText(winname).width(), 30);
+        console.log(clickableElements, windows);
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, 1700, 40);
+        ctx.fillStyle = "white";
+        var idx = 0
+        windows.forEach((el) => {
+            console.log("Hi", String(el.winname));
+            ctx.fillText(String(el.winname), idx * 100, 30);
+            idx = idx + 1
+        });
     };
     function Window1(x, y, width, height, title, win){
         clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":120,\"y\":743,\"width\":48,\"height\":48,\"code\":1}]");
@@ -105,14 +160,7 @@ Your browser does not support the HTML canvas tag.</canvas>
             };
         });
         createClick(x+width-30, y, 10, 30, ()=>{
-            win.ImageData = ctx.getImageData(x, y, width, height);
-            windows = windows.filter((_, index) => index !== win.id);;
-            ctx.clearRect(x, y, width+1, height+1);
-            ctx.fillStyle = "white";
-            // ctx.clearRect(windows.length * 100, 30, ctx.measureText(winname).width(), 30);
-            ctx.clearRect(windows.length * 100, 0, ctx.measureText(win.winname).width, 30);
-            ctx.fillStyle = "black";
-            ctx.fillRect(windows.length * 100, 0, ctx.measureText(win.winname).width+2, 30);
+            CloseWindow(win, x, y, width, height);
         });
         createClick(x+width-60, y, 10, 30, ()=>{
             console.log("BOX");
@@ -191,6 +239,9 @@ Your browser does not support the HTML canvas tag.</canvas>
                 layer = MoveRight(layer);
             }else if(event.keyCode == 37 && mode == 1){ // Left
                 layer = MoveLeft(layer);
+            }else if(event.ctrlKey && event.key === 'w'){
+                ev.preventDefault();
+                alert("HII");
             }else{
                 console.log(event.keyCode);
             };
