@@ -159,9 +159,11 @@
                 ctx.fillText("Tell me something good about you that could help us. Be short in your description.", x+1, y+350);
                 // change.add(inputNum);
                 addInput(x+560, y+350, "GoodLogin");
-                createOnClickButton(x+500, y+630, 500, 40, "Do The Google Forms", (send)=>{
-                    window.open("https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing");
-                })
+                if (method == "TVA") {
+                    createOnClickButton(x+500, y+630, 500, 40, "Do The Google Forms", (send)=>{
+                        window.open("https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing");
+                    })
+                }
                 createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
                     // document.getElementById("GoodLogin").value;
                     send_to = "Vishnu Ramesh";
