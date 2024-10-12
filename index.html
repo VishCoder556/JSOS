@@ -47,28 +47,29 @@
         createClick(x, y, width, height, onClick);
     };
     var inputNum = 0;
+    var winNum = 0;
     function addInput(x, y, id=0) {
 
-    var input = document.createElement('input');
+        var input = document.createElement('input');
 
-    input.type = 'text';
-    input.style.position = 'absolute';
-    input.style.left = (x - 4) + 'px';
-    input.style.top = (y - 4) + 'px';
-    if (!id) {
-        input.id = inputNum + "Id";
-    }else {
-        input.id = id;
-    }
-    inputNum++;
+        input.type = 'text';
+        input.style.position = 'absolute';
+        input.style.left = (x - 4) + 'px';
+        input.style.top = (y - 4) + 'px';
+        if (!id) {
+            input.id = inputNum + "Id";
+        }else {
+            input.id = id;
+        }
+        inputNum++;
 
-    input.onkeydown = handleEnter;
+        input.onkeydown = handleEnter;
 
-    document.getElementById("List").appendChild(input);
+        document.getElementById((winNum-1)+"Div").appendChild(input);
 
-    // input.focus();
+        // input.focus();
 
-    hasInput = true;
+        hasInput = true;
     }
 
     //Key handler for input box:
@@ -141,8 +142,8 @@
         change = []
         CustomerDifficultyLogin(x, y, method)
         select1.addEventListener("change", (event)=>{
-            document.getElementById("List").innerHTML = "";
-            document.getElementById("List").appendChild(select1);
+            document.getElementById((winNum) + "Div").innerHTML = "";
+            document.getElementById((winNum) + "Div").appendChild(select1);
             ctx.clearRect(x+1, y+310, 1000, 300);
             ctx.clearRect(x+2, y+250, 500, 80);
             ctx.clearRect(x, y+380, 200, 300);
@@ -194,7 +195,7 @@
                 ;
             };
         });
-        document.getElementById("List").appendChild(select1);
+        document.getElementById((winNum-1) + "Div").appendChild(select1);
     };
     function Setup(x, y, width, height, title, win){
         if (win.name == "RedGame"){
@@ -206,9 +207,9 @@
             // Create Select
             select = CreateDropDown(x+20, y+150)
             select.innerHTML = "<option value=0 selected>None</option><option value=1>TVA</option><option value=2>Epic Games</option>";
-            document.getElementById("ImportantList").appendChild(select);
+            document.getElementById((winNum-1)+"ImportantDiv").appendChild(select);
             select.addEventListener("change", (event)=>{
-                document.getElementById("List").innerHTML = "";
+                document.getElementById((winNum-1) + "Div").innerHTML = "";
                 select.children[0].remove();
                 if (select.value == 1){
                     LoginApp(x, y, "TVA");
@@ -221,6 +222,11 @@
         };
     };
     function MoveLeft(layer){
+        winNum--;
+        if (document.getElementById((winNum-1) + "Div") && document.getElementById((winNum-1) + "ImportantDiv")) {
+        document.getElementById((winNum-1) + "Div").removeAttribute("hidden");
+        document.getElementById((winNum-1) + "ImportantDiv").removeAttribute("hidden");
+        }
         if (layer == -1 && layer < windows.length){
             if (windows.length != 1) {
                 layer = windows.length-1;
@@ -229,6 +235,7 @@
             }
         };
         windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
+        console.log(windows[layer-1].ImageData, windows[layer].ImageData);
         if(layer > 0){
             ctx.putImageData(windows[layer-1].ImageData, 0, 40);
         }
@@ -256,6 +263,12 @@
     };
     function MoveRight(layer){
         if (layer != -1 && layer < windows.length){
+            console.log(document.getElementById((winNum-1) + "ImportantDiv"));
+            document.getElementById((winNum-1) + "Div").hidden = "true";
+            document.getElementById((winNum-1) + "ImportantDiv").hidden = "true";
+            document.getElementById((winNum) + "Div").removeAttribute("hidden");
+            document.getElementById((winNum) + "ImportantDiv").removeAttribute("hidden");
+            winNum++;
             windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
             if (layer + 1 != windows.length) {
                 ctx.putImageData(windows[layer+1].ImageData, 0, 40);
@@ -282,8 +295,8 @@
     };
     function CloseWindow(win, x, y, width, height){
         // win.ImageData = ctx.getImageData(x, y, width, height);
-        document.getElementById("List").innerHTML = "";
-        document.getElementById("ImportantList").innerHTML = "";
+        document.getElementById(winNum-1 + "Div").innerHTML = "";
+        document.getElementById((winNum-1)+"ImportantDiv").remove();
         win.title = "";
         ctx.clearRect(x, y, width+1, height+1);
         ctx.fillStyle = "white";
@@ -306,6 +319,11 @@
         });
     };
     function Window1(x, y, width, height, title, win){
+        if (document.getElementById((winNum-1) + "Div") && document.getElementById((winNum-1) + "ImportantDiv")) {
+            document.getElementById((winNum-1) + "Div").hidden = "true";
+            document.getElementById((winNum-1) + "ImportantDiv").hidden = "true";
+        }
+        winNum++;
         clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":120,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":180,\"y\":747,\"width\":40,\"height\":40,\"code\":2}]");
         clickableElements[0].functionOnClicked = (event) => {
             console.log("Opening the time");
@@ -316,6 +334,12 @@
         clickableElements[2].functionOnClicked = (event) => {
             Game("Login");
         };
+        span = document.createElement("span");
+        span.id = win.id+"Div";
+        document.getElementById("List").appendChild(span);
+        span = document.createElement("span");
+        span.id = win.id+"ImportantDiv";
+        document.getElementById("ImportantList").appendChild(span);
         Setup(x, y, width, height, title, win);
         win.ImageData = ctx.getImageData(x, y, width, height);
         ctx.rect(x, y, width, height);
@@ -337,7 +361,7 @@
         });
         createClick(x+width-30, y, 10, 30, ()=>{
             CloseWindow(win, x, y, width, height);
-            document.getElementById("List").innerHTML = "";
+            document.getElementById((winNum - 1) + "Div").innerHTML = "";
         });
         createClick(x+width-60, y, 10, 30, ()=>{
             console.log("BOX");
