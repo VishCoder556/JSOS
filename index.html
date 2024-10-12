@@ -105,6 +105,11 @@
         ctx.fillText("We're sorry to hear that! Please tell us about your problem.", x, y+350);
         change.push(inputNum);
         addInput(x+450, y+350, "CustomerDifficulty");
+        if (method == "TVA") {
+            createOnClickButton(x+1000, y+600, 300, 40, "Do The Google Forms", (send)=>{
+                window.open("https://docs.google.com/forms/d/e/1FAIpQLScEFQvepNagjLgymRZQuCPKik4Is-UTKoU3V9BAI-Nq8owfVw/viewform?usp=sharing");
+            })
+        }
         createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
             send_to = "Vishnu Ramesh";
             if (method == "TVA"){
