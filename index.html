@@ -472,16 +472,22 @@
             console.log("Opening the time");
         });
 
+        const now = new Date(); // Get the current date and time
+        let hours = now.getHours(); // Get the current hour (0-23)
+        let minutes = now.getMinutes(); // Get the current minutes (0-59)
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        ctx.fillText(hours+":"+minutes, 100, 780);
+
         document.getElementById("star").addEventListener("load", (e) => {
-            ctx.drawImage(document.getElementById("star"), 120, 743, 48, 48);
-            createClick(120, 743, 48, 48, ()=>{
+            ctx.drawImage(document.getElementById("star"), 160, 743, 48, 48);
+            createClick(160, 743, 48, 48, ()=>{
                 Game("RedGame");
             });
         })
 
         document.getElementById("login").addEventListener("load", (e) => {
-            ctx.drawImage(document.getElementById("login"), 180, 747, 40, 40);
-            createClick(180, 747, 40, 40, ()=>{
+            ctx.drawImage(document.getElementById("login"), 220, 747, 40, 40);
+            createClick(220, 747, 40, 40, ()=>{
                 Game("Login");
             });
         })
