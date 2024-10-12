@@ -195,13 +195,11 @@
             document.getElementById("ImportantList").appendChild(select);
             select.addEventListener("change", (event)=>{
                 document.getElementById("List").innerHTML = "";
-                document.getElementById("List").appendChild(select);
+                select.children[0].remove();
                 if (select.value == 1){
                     LoginApp(x, y, "TVA");
                 }else if (select.value == 2){
                     LoginApp(x, y, "EpicGames");
-                }else {
-                    select.value = 2;
                 };
                 // addInput(x+50, y+200);
             });
