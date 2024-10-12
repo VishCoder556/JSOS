@@ -116,7 +116,7 @@
                 window.open("https://docs.google.com/forms/d/e/1FAIpQLScEFQvepNagjLgymRZQuCPKik4Is-UTKoU3V9BAI-Nq8owfVw/viewform?usp=sharing");
             })
         }
-        createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
+        createOnClickButton(x, y+380, 100, 40, language=="English"?"Send":"அனுப்பு", (send)=>{
             send_to = "Vishnu Ramesh";
             if (method == "TVA"){
                 send_to = "Joseph Mattucci";
@@ -131,7 +131,7 @@
             ctx.fillText("  Email this to josephmat9428@k12.ipsd.org", x, y+580, 1450);
             }
             email_prompt = "To "+send_to+", \n  I have a problem with "+method+". My name is ____.\n  My problem is that "+document.getElementById("CustomerDifficulty").value+".\n  Please try to fix it! ";
-            createOnClickButton(x, y+590, 100, 40, "Copy", (send)=>{
+            createOnClickButton(x, y+590, 100, 40, language=="English"?"Copy":"நகலாக்கு", (send)=>{
                 navigator.clipboard.writeText(email_prompt);
             })
         });
@@ -176,7 +176,7 @@
                         window.open("https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing");
                     })
                 }
-                createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
+                createOnClickButton(x, y+380, 100, 40, language=="English"?"Send":"அனுப்பு", (send)=>{
                     // document.getElementById("GoodLogin").value;
                     send_to = "Vishnu Ramesh";
                     if (method == "TVA"){
@@ -193,7 +193,7 @@
                     }
                     // TODO: REDIRECT TO https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing INSTEAD
                     email_prompt = "To "+send_to+", \n  I want to enroll into "+method+". My name is ____.\n  One thing that is good about me is that I can "+document.getElementById("GoodLogin").value+"\n  Please respond with a location to meet! ";
-                    createOnClickButton(x, y+590, 100, 40, "Copy", (send)=>{
+                    createOnClickButton(x, y+590, 100, 40, language=="English"?"Copy":"நகலாக்கு", (send)=>{
                         navigator.clipboard.writeText(email_prompt);
                     })
                 });
