@@ -142,12 +142,13 @@
         change = []
         CustomerDifficultyLogin(x, y, method)
         select1.addEventListener("change", (event)=>{
-            document.getElementById((winNum) + "Div").innerHTML = "";
-            document.getElementById((winNum) + "Div").appendChild(select1);
+            document.getElementById((winNum-1) + "Div").innerHTML = "";
+            document.getElementById((winNum-1) + "Div").appendChild(select1);
             ctx.clearRect(x+1, y+310, 1000, 300);
             ctx.clearRect(x+2, y+250, 500, 80);
             ctx.clearRect(x, y+380, 200, 300);
             ctx.clearRect(x+500, y+600, 500, 80);
+            ctx.clearRect(x+1000, y+600, 300, 40);
             for (i=0;i<=clickableElements.length; i++){
                 if (clickableElements[i]) {
                     // console.log(clickableElements[i], x, y+380, 100, 40);
@@ -266,8 +267,10 @@
             console.log(document.getElementById((winNum-1) + "ImportantDiv"));
             document.getElementById((winNum-1) + "Div").hidden = "true";
             document.getElementById((winNum-1) + "ImportantDiv").hidden = "true";
+            if (document.getElementById((winNum) + "Div")) {
             document.getElementById((winNum) + "Div").removeAttribute("hidden");
             document.getElementById((winNum) + "ImportantDiv").removeAttribute("hidden");
+            }
             winNum++;
             windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
             if (layer + 1 != windows.length) {
