@@ -298,7 +298,8 @@
     };
     function CloseWindow(win, x, y, width, height){
         // win.ImageData = ctx.getImageData(x, y, width, height);
-        document.getElementById(winNum-1 + "Div").innerHTML = "";
+        document.getElementById((winNum-1) + "Div").innerHTML = "";
+        console.log(winNum);
         document.getElementById((winNum-1)+"ImportantDiv").remove();
         win.title = "";
         ctx.clearRect(x, y, width+1, height+1);
