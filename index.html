@@ -101,7 +101,8 @@
 
     change = [inputNum];
     function CustomerDifficultyLogin(x, y, method){
-        ctx.fillText("We're sorry to hear that! Please tell us about your experience.", x, y+350);
+        ctx.font = "15px Arial";
+        ctx.fillText("We're sorry to hear that! Please tell us about your problem.", x, y+350);
         change.push(inputNum);
         addInput(x+450, y+350, "CustomerDifficulty");
         createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
@@ -136,9 +137,11 @@
         CustomerDifficultyLogin(x, y, method)
         select1.addEventListener("change", (event)=>{
             document.getElementById("List").innerHTML = "";
+            document.getElementById("List").appendChild(select1);
             ctx.clearRect(x+1, y+310, 1000, 300);
             ctx.clearRect(x+2, y+250, 500, 80);
             ctx.clearRect(x, y+380, 200, 300);
+            ctx.clearRect(x+500, y+600, 500, 80);
             for (i=0;i<=clickableElements.length; i++){
                 if (clickableElements[i]) {
                     // console.log(clickableElements[i], x, y+380, 100, 40);
@@ -156,6 +159,9 @@
                 ctx.fillText("Tell me something good about you that could help us. Be short in your description.", x+1, y+350);
                 // change.add(inputNum);
                 addInput(x+560, y+350, "GoodLogin");
+                createOnClickButton(x+500, y+630, 500, 40, "Do The Google Forms", (send)=>{
+                    window.open("https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing");
+                })
                 createOnClickButton(x, y+380, 100, 40, "Send", (send)=>{
                     // document.getElementById("GoodLogin").value;
                     send_to = "Vishnu Ramesh";
@@ -171,6 +177,7 @@
                     }else if (send_to == "Joseph Mattucci") {
                     ctx.fillText("  Email this to josephmat9428@k12.ipsd.org", x, y+580, 1450);
                     }
+                    // TODO: REDIRECT TO https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing INSTEAD
                     email_prompt = "To "+send_to+", \n  I want to enroll into "+method+". My name is ____.\n  One thing that is good about me is that I can "+document.getElementById("GoodLogin").value+"\n  Please respond with a location to meet! ";
                     createOnClickButton(x, y+590, 100, 40, "Copy", (send)=>{
                         navigator.clipboard.writeText(email_prompt);
