@@ -9,6 +9,7 @@
 
 <img id="star" width="200" height="220" src="assets/star.png" hidden>
 <img id="login" width="200" height="220" src="assets/login.png" hidden>
+<img id="settings" width="200" height="220" src="assets/settings.png" hidden>
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
     <div id="List"></div>
@@ -18,6 +19,10 @@
     var canvas = document.getElementById("os");
     var ctx = canvas.getContext("2d");
     var clickableElements = [];
+    var language = "English";
+    if (localStorage.language){
+        language = localStorage.language;
+    };
     var windows = [];
     ctx.font = "30px Arial";
     function createClick(x, y, width, height, clicked){
@@ -33,8 +38,8 @@
         }
         });
     });
-    function createButton(x, y, width, height, title){
-        ctx.fillStyle = "grey";
+    function createButton(x, y, width, height, title, fillColor="grey"){
+        ctx.fillStyle = fillColor;
         ctx.fillRect(x, y, width, height);
         ctx.font = "20px Arial";
         ctx.fillStyle = "black";
@@ -42,8 +47,8 @@
         const textWidth = textMetrics.width;
         ctx.fillText(title, x + (width - textWidth) / 2, y + (height + parseInt(ctx.font, 10)) / 2 - 5);
     };
-    function createOnClickButton(x, y, width, height, title, onClick){
-        createButton(x, y, width, height, title);
+    function createOnClickButton(x, y, width, height, title, onClick, fillColor="grey"){
+        createButton(x, y, width, height, title, fillColor);
         createClick(x, y, width, height, onClick);
     };
     var inputNum = 0;
@@ -103,11 +108,11 @@
     change = [inputNum];
     function CustomerDifficultyLogin(x, y, method){
         ctx.font = "15px Arial";
-        ctx.fillText("We're sorry to hear that! Please tell us about your problem.", x, y+350);
+        ctx.fillText(language=='English'?"We're sorry to hear that! Please tell us about your problem.":"அதைக் கேட்டு வருந்துகிறோம்! உங்கள் பிரச்சனை பற்றி எங்களிடம் கூறுங்கள்.", x, y+350);
         change.push(inputNum);
         addInput(x+450, y+350, "CustomerDifficulty");
         if (method == "TVA") {
-            createOnClickButton(x+1000, y+600, 300, 40, "Do The Google Forms", (send)=>{
+            createOnClickButton(x+1000, y+600, 300, 40, language=='English'?"Do The Google Forms":"படிவத்தை செய்யுங்கள்", (send)=>{
                 window.open("https://docs.google.com/forms/d/e/1FAIpQLScEFQvepNagjLgymRZQuCPKik4Is-UTKoU3V9BAI-Nq8owfVw/viewform?usp=sharing");
             })
         }
@@ -134,11 +139,11 @@
 
     function LoginApp(x, y, method){
         ctx.font = "20px Arial";
-        ctx.fillText("Please fill out the following form", x, y+200);
+        ctx.fillText((language=="English"?"Please fill out the following form":"தயவுசெஞ்சு இந்த படிவத்தை நிரப்பவும்."), x, y+200);
         ctx.font = "15px Arial";
-        ctx.fillText("What is your purpose of coming here? ", x+20, y+300);
+        ctx.fillText((language=="English"?"What is your purpose of coming here? ":"எதற்காக இங்கு வந்தாய்?."), x+20, y+300);
         select1 = CreateDropDown(x+300, y+300);
-        select1.innerHTML = "<option value=1>Customer Difficulty</option><option value=2>Enrollment</option>";
+        select1.innerHTML = "<option value=1>"+(language=="English"?"Customer Difficulty":"வாடிக்கையாளர் கஷ்டம்")+"</option><option value=2>"+(language=="English"?"Enrollment":"சேரவும்")+"</option>";
         change = []
         CustomerDifficultyLogin(x, y, method)
         select1.addEventListener("change", (event)=>{
@@ -163,7 +168,7 @@
                 CustomerDifficultyLogin(x, y, method)
             }else if (select1.value == 2){
                 ctx.font = "15px Arial";
-                ctx.fillText("Tell me something good about you that could help us. Be short in your description.", x+1, y+350);
+                ctx.fillText((language=="English"?"Tell me something good about you that could help us. Be short in your description.":"உங்களைப் பற்றி எங்களுக்கு உதவக்கூடிய நல்லதைச் சொல்லுங்கள்."), x+1, y+350);
                 // change.add(inputNum);
                 addInput(x+560, y+350, "GoodLogin");
                 if (method == "TVA") {
@@ -198,16 +203,46 @@
         });
         document.getElementById((winNum-1) + "Div").appendChild(select1);
     };
+    function LanguageChoose(x, y, alreadyWent=false){
+
+        document.getElementById((winNum-1)+"Div").innerHTML = "";
+                createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
+                }, "gray");;
+                createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "#b0b0b0");
+                ctx.clearRect(x+301, y+70, 900, 400);
+                ctx.font = "25px Helvetica";
+                ctx.fillText(language=='English'?list[1][0]:list[1][1]+": ", x+301, y+100);
+                var dropDown = CreateDropDown(x+500, y+100);
+                dropDown.innerHTML = "<option value=0>English</option><option value=1>தமிழ்</option>";
+                // console.log(language);
+                if (language == "English"){dropDown.children[0].setAttribute("selected", "true");}else if (language == "Tamil"){dropDown.children[1].setAttribute("selected", "true");};
+                dropDown.addEventListener("change", (event)=>{
+                    if (dropDown.value == 0){
+                        language = "English";
+                        localStorage.language = language;
+                        if (alreadyWent == false) {
+                        LanguageChoose(x, y, true);
+                        }
+                    }else if (dropDown.value == 1){
+                        language = "Tamil";
+                        localStorage.language = language;
+                        if (alreadyWent == false) {
+                        LanguageChoose(x, y, true);
+                        }
+                    };
+                });
+                document.getElementById((winNum-1)+"ImportantDiv").appendChild(dropDown);
+    };
     function Setup(x, y, width, height, title, win){
         if (win.name == "RedGame"){
             ctx.font = "80px Roboto";
-            ctx.fillText("Games", x, y+100);
+            ctx.fillText(language=="English"?"Games":"விளையாட்டு", x, y+100);
             ctx.font = "20px Arial";
         }else if(win.name == "Login"){
             ctx.fillText("Login", x, y+100);
             // Create Select
             select = CreateDropDown(x+20, y+150)
-            select.innerHTML = "<option value=0 selected>None</option><option value=1>TVA</option><option value=2>Epic Games</option>";
+            select.innerHTML = "<option value=0 selected>"+(language=="English"?"None":"இல்லை")+"</option><option value=1>"+(language=="English"?"TVA":"டிவிஏ")+"</option><option value=2>"+(language=="English"?"Epic Games":"அருமையான விளையாட்டுகள்")+"</option>";
             document.getElementById((winNum-1)+"ImportantDiv").appendChild(select);
             select.addEventListener("change", (event)=>{
                 document.getElementById((winNum-1) + "Div").innerHTML = "";
@@ -220,6 +255,28 @@
                 // addInput(x+50, y+200);
             });
             // Add input
+        }else if(win.name == "Settings"){
+            ctx.font = "30px Helvetica";
+            ctx.fillStyle = "grey";
+            ctx.fillRect(x+1, y+30, 300, 670);
+            ctx.fillStyle = "black";
+            ctx.fillStyle = "black";
+            ctx.fillRect(x+50, y+100, 100, 40);
+            ctx.font = "25px Helvetica";
+            ctx.fillText(language=='English'?"Lockscreen: ":"பூட்டுத்திரை: ", x+301, y+100);
+            list = [["Personalization", "தனிப்படுத்தல்"], ["Language", "மொழி"]];
+            createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
+                document.getElementById((winNum-1)+"ImportantDiv").innerHTML = "";
+                createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
+                createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
+                }, "#b0b0b0");
+                ctx.clearRect(x+301, y+70, 900, 400);
+                ctx.font = "25px Helvetica";
+                ctx.fillText(language=='English'?"Lockscreen: ":"பூட்டுத்திரை: ", x+301, y+100);
+            }, "#b0b0b0");
+            createOnClickButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], (ev)=>{
+                LanguageChoose(x, y);
+            });
         };
     };
     function MoveLeft(layer){
@@ -317,6 +374,7 @@
         ctx.fillRect(0, 0, 1700, 40);
         ctx.fillStyle = "white";
         var idx = 0
+            ctx.font = "10px Arial";
         windows.forEach((el) => {
             ctx.fillText(String(el.winname), idx * 100, 30);
             idx = idx + 1
@@ -328,7 +386,7 @@
             document.getElementById((winNum-1) + "ImportantDiv").hidden = "true";
         }
         winNum++;
-        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":120,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":180,\"y\":747,\"width\":40,\"height\":40,\"code\":2}]");
+        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":160,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":220,\"y\":747,\"width\":40,\"height\":40,\"code\":2},{\"x\":270,\"y\":750,\"width\":36,\"height\":36,\"code\":3}]");
         clickableElements[0].functionOnClicked = (event) => {
             console.log("Opening the time");
         };
@@ -337,6 +395,9 @@
         };
         clickableElements[2].functionOnClicked = (event) => {
             Game("Login");
+        };
+        clickableElements[3].functionOnClicked = (event) => {
+            Game("Settings");
         };
         span = document.createElement("span");
         span.id = win.id+"Div";
@@ -350,6 +411,7 @@
         ctx.stroke();
         ctx.rect(x, y, width, 30);
         ctx.stroke();
+            ctx.font = "20px Arial";
         ctx.fillText(title, x+10, y+25);
         ctx.fillStyle = "black";
         ctx.fillText("-", x+width-90, y+25);
@@ -489,6 +551,13 @@
             ctx.drawImage(document.getElementById("login"), 220, 747, 40, 40);
             createClick(220, 747, 40, 40, ()=>{
                 Game("Login");
+            });
+        })
+
+        document.getElementById("settings").addEventListener("load", (e) => {
+            ctx.drawImage(document.getElementById("settings"), 270, 750, 36, 36);
+            createClick(270, 750, 36, 36, ()=>{
+                Game("Settings");
             });
         })
     }
