@@ -464,6 +464,7 @@
         span = document.createElement("span");
         span.id = win.id+"ImportantDiv";
         document.getElementById("ImportantList").appendChild(span);
+        ctx.clearRect(0, 40, 1450, 710);
         Setup(x, y, width, height, title, win);
         win.ImageData = ctx.getImageData(x, y, width, height);
         ctx.rect(x, y, width, height);
@@ -502,6 +503,19 @@
         ctx.fillStyle = "black";
         Window1(0, 40, 1450, 710, winname, win);
     };
+    setInterval(()=>{
+        const now = new Date(); // Get the current date and time
+        let hours = now.getHours(); // Get the current hour (0-23)
+        let minutes = now.getMinutes(); // Get the current minutes (0-59)
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        fill = ctx.fillStyle;
+        ctx.fillStyle = "grey";
+        // ctx.clearRect(0, 0, ctx.measureText("24:24"),40); // WRONG
+        ctx.fillRect(100, 750, 60, 60);
+        ctx.fillStyle = fill;
+        ctx.fillText(hours+":"+minutes, 100, 780);
+        console.log("HI");
+    }, 1000);
     if (!localStorage.OSBooted) {
         localStorage.OSBooted = true;
         ctx.rect(10,15,300,200);
