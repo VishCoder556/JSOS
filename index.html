@@ -12,6 +12,7 @@
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
     <div id="List"></div>
+    <div id="ImportantList"></div>
 
 <script>
     var canvas = document.getElementById("os");
@@ -130,24 +131,18 @@
         ctx.font = "15px Arial";
         ctx.fillText("What is your purpose of coming here? ", x+20, y+300);
         select1 = CreateDropDown(x+300, y+300);
-        select1.innerHTML = "<option value=1>Customer Difficulty</option><option value=2>Enrollment</option><option value=3>Contract</option>";
+        select1.innerHTML = "<option value=1>Customer Difficulty</option><option value=2>Enrollment</option>";
         change = []
         CustomerDifficultyLogin(x, y, method)
         select1.addEventListener("change", (event)=>{
-            // ctx.clearRect(x+2, y+250, 500, 80);
-            // if (change.length != 1) {
-                change.forEach((item) => {
-                    if (document.getElementById((item) + "Id") != null) {
-                        console.log(item, document.getElementById((item) + "Id"));
-                        document.getElementById("List").removeChild(document.getElementById((item) + "Id"));
-                    }
-                });
-            // }
-            ctx.clearRect(x+1, y+310, 1000, 200);
-            // ctx.clearRect(x, y+380, 200, 300);
+            document.getElementById("List").innerHTML = "";
+            ctx.clearRect(x+1, y+310, 1000, 300);
+            ctx.clearRect(x+2, y+250, 500, 80);
+            ctx.clearRect(x, y+380, 200, 300);
             for (i=0;i<=clickableElements.length; i++){
                 if (clickableElements[i]) {
-                    if (clickableElements[i].x == x && clickableElements[i].y == y+380 && clickableElements[i].width==100 && clickableElements[i].width==40) {
+                    // console.log(clickableElements[i], x, y+380, 100, 40);
+                    if (clickableElements[i].x === x && clickableElements[i].y === y+380 && clickableElements[i].width===100 && clickableElements[i].height===40) {
                         console.log("Hi");
                         clickableElements.splice(i, 1);
                     }
@@ -157,6 +152,7 @@
                 change.push(inputNum);
                 CustomerDifficultyLogin(x, y, method)
             }else if (select1.value == 2){
+                ctx.font = "15px Arial";
                 ctx.fillText("Tell me something good about you that could help us. Be short in your description.", x+1, y+350);
                 // change.add(inputNum);
                 addInput(x+560, y+350, "GoodLogin");
@@ -196,7 +192,7 @@
             // Create Select
             select = CreateDropDown(x+20, y+150)
             select.innerHTML = "<option value=0 selected>None</option><option value=1>TVA</option><option value=2>Epic Games</option>";
-            document.getElementById("List").appendChild(select);
+            document.getElementById("ImportantList").appendChild(select);
             select.addEventListener("change", (event)=>{
                 document.getElementById("List").innerHTML = "";
                 document.getElementById("List").appendChild(select);
@@ -273,15 +269,19 @@
         return layer;
     };
     function CloseWindow(win, x, y, width, height){
-        win.ImageData = ctx.getImageData(x, y, width, height);
-        windows = windows.filter((_, index) => index !== win.id);
+        // win.ImageData = ctx.getImageData(x, y, width, height);
+        document.getElementById("List").innerHTML = "";
+        document.getElementById("ImportantList").innerHTML = "";
+        win.title = "";
         ctx.clearRect(x, y, width+1, height+1);
         ctx.fillStyle = "white";
         for (let i = windows.length - 1; i >= 0; i--) {
-            if (windows[i] === 0) {
+            if (windows[i] == win) {
                 windows.splice(i, 1); // Remove element at index i
+                // break;
             }
         }
+        // windows = windows.filter(item => item.name !== "HIII")
         // ctx.clearRect(windows.length * 100, 30, ctx.measureText(winname).width(), 30);
         console.log(clickableElements, windows);
         ctx.fillStyle = "black";
@@ -289,7 +289,6 @@
         ctx.fillStyle = "white";
         var idx = 0
         windows.forEach((el) => {
-            console.log("Hi", String(el.winname));
             ctx.fillText(String(el.winname), idx * 100, 30);
             idx = idx + 1
         });
