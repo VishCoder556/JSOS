@@ -439,12 +439,12 @@ function getOSDetails() {
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
                 createButton(x+1, y+250, 300, 40, language=='English'?list[3][0]:list[3][1], "#b0b0b0");
                 ctx.clearRect(301, 70, 900, 300);
-                ctx.fillText("ⓘ VishnuOS Computer", x+310, y+100);
-                ctx.fillText("© Epic Sites Inc.", x+310, y+130);
-                ctx.fillText("By: Vishnu Ramesh and Joey Matteucci", x+310, y+150);
-                ctx.fillText("Partially allied with TVA (Timeless Vision Association) Inc. (Contract was not yet created)", x+310, y+170);
-                ctx.fillText("All Rights Reserved", x+310, y+200);
-                ctx.fillText("Running on " + getOSDetails(), x+310, y+500);
+                ctx.fillText(language=="English"?"ⓘ VishnuOS Computer":"விஷ்ணு கணினி", x+310, y+100);
+                ctx.fillText(language=="English"?"© Epic Sites Inc.":"மூலம்: அற்புதமான தளங்கள்", x+310, y+130);
+                ctx.fillText(language=="English"?"By: Vishnu Ramesh and Joey Matteucci":"மூலம்: விஷ்ணு ரமேஷ் மற்றும் ஜோயி மேட்டியூசி", x+310, y+150);
+                ctx.fillText(language=="English"?"Partially allied with TVA (Timeless Vision Association) Inc. (Contract was not yet created)":"டிவிஏ உடன் ஓரளவு இணைந்துள்ளது (ஒப்பந்தம் இன்னும் உருவாக்கப்படவில்லை)", x+310, y+170);
+                ctx.fillText(language=="English"?"All Rights Reserved":"அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை", x+310, y+200);
+                ctx.fillText(language=="English"?"Running on ":"உங்கள் கணினி " + getOSDetails(), x+310, y+500);
             });
         };
     };
