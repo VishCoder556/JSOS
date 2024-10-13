@@ -10,6 +10,14 @@
 <img id="star" width="200" height="220" src="assets/star.png" hidden>
 <img id="login" width="200" height="220" src="assets/login.png" hidden>
 <img id="settings" width="200" height="220" src="assets/settings.png" hidden>
+<span id="landscapes" hidden>
+    <img id="L1" width="200" height="220" src="assets/landscapes/1.jpeg" hidden>
+    <img id="L2" width="200" height="220" src="assets/landscapes/2.jpeg" hidden>
+    <img id="L3" width="200" height="220" src="assets/landscapes/3.jpg" hidden>
+    <img id="L4" width="200" height="220" src="assets/landscapes/4.jpg" hidden>
+    <img id="L5" width="200" height="220" src="assets/landscapes/5.webp" hidden>
+    <img id="L6" width="200" height="220" src="assets/landscapes/6.jpeg" hidden>
+</span>
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
     <div id="List"></div>
@@ -19,7 +27,7 @@
     var canvas = document.getElementById("os");
     var ctx = canvas.getContext("2d");
     var clickableElements = [];
-    var lockscreen = {type:"color", color: "white"};
+    var lockscreen = {type:"picture", color: "5"};
     if (localStorage.lockscreen){
         lockscreen = JSON.parse(localStorage.lockscreen);
     };
@@ -35,8 +43,12 @@
     function LockScreen(){
         if (lockscreen.type == "color") {
             ctx.fillStyle = lockscreen.color;
+            ctx.fillRect(0, 40, 1450, 789);
+        }else if (lockscreen.type == "picture"){
+            document.getElementById("L"+lockscreen.color).addEventListener("load", (e) => {
+                ctx.drawImage(document.getElementById("L"+lockscreen.color), 0, 40, 1450, 710);
+            });
         }
-        ctx.fillRect(0, 40, 1450, 789);
     };
     canvas.addEventListener('click', function(event) {
         const rect = canvas.getBoundingClientRect(); // Get canvas bounds
@@ -80,7 +92,7 @@
 
         input.onkeydown = handleEnter;
 
-        document.getElementById((winNum-1)+"Div").appendChild(input);
+        document.getElementById((winNum==0?0:winNum-1)+"Div").appendChild(input);
 
         // input.focus();
 
@@ -129,7 +141,7 @@
         createOnClickButton(x, y+380, 100, 40, language=="English"?"Send":"அனுப்பு", (send)=>{
             send_to = "Vishnu Ramesh";
             if (method == "TVA"){
-                send_to = "Joseph Mattucci";
+                send_to = "Joey Matteucci";
             };
             ctx.fillText("To "+send_to+",", x, y+500, 1450);
             ctx.fillText("  I have a problem with "+method+". My name is ____.", x, y+520, 1450);
@@ -137,7 +149,7 @@
             ctx.fillText("  Please try to fix it! ", x, y+560, 1450);
             if (send_to == "Vishnu Ramesh") {
             ctx.fillText("  Email this to vishnuram9120@k12.ipsd.org", x, y+580, 1450);
-            }else if (send_to == "Joseph Mattucci") {
+            }else if (send_to == "Joey Matteucci") {
             ctx.fillText("  Email this to josephmat9428@k12.ipsd.org", x, y+580, 1450);
             }
             email_prompt = "To "+send_to+", \n  I have a problem with "+method+". My name is ____.\n  My problem is that "+document.getElementById("CustomerDifficulty").value+".\n  Please try to fix it! ";
@@ -157,10 +169,11 @@
         change = []
         CustomerDifficultyLogin(x, y, method)
         select1.addEventListener("change", (event)=>{
-            document.getElementById((winNum-1) + "Div").innerHTML = "";
-            document.getElementById((winNum-1) + "Div").appendChild(select1);
-            ctx.clearRect(x+1, y+310, 1000, 300);
-            ctx.clearRect(x+2, y+250, 500, 80);
+            document.getElementById((winNum==0?0:winNum-1) + "Div").innerHTML = "";
+            document.getElementById((winNum==0?0:winNum-1) + "Div").appendChild(select1);
+            ctx.clearRect(x+1, y+310, 1449, 900);
+            ctx.clearRect(x+2, y+250, 500, 900);
+            ctx.clearRect(x+2, y+1, 1450, 900);
             ctx.clearRect(x, y+380, 200, 300);
             ctx.clearRect(x+500, y+600, 500, 80);
             ctx.clearRect(x+1000, y+600, 300, 40);
@@ -190,7 +203,7 @@
                     // document.getElementById("GoodLogin").value;
                     send_to = "Vishnu Ramesh";
                     if (method == "TVA"){
-                        send_to = "Joseph Mattucci";
+                        send_to = "Joey Matteucci";
                     };
                     ctx.fillText("To "+send_to+",", x, y+500, 1450);
                     ctx.fillText("  I want to enroll into "+method+". My name is ____.", x, y+520, 1450);
@@ -198,7 +211,7 @@
                     ctx.fillText("  Please respond with a location to meet! ", x, y+560, 1450);
                     if (send_to == "Vishnu Ramesh") {
                     ctx.fillText("  Email this to vishnuramesh620@gmail.com", x, y+580, 1450);
-                    }else if (send_to == "Joseph Mattucci") {
+                    }else if (send_to == "Joey Matteucci") {
                     ctx.fillText("  Email this to josephmat9428@k12.ipsd.org", x, y+580, 1450);
                     }
                     // TODO: REDIRECT TO https://docs.google.com/forms/d/e/1FAIpQLSeN8utjC2StrC0pMNWotB00ulUXHx_zHbBX4fhOhYuUTuIpnA/viewform?usp=sharing INSTEAD
@@ -211,15 +224,15 @@
                 ;
             };
         });
-        document.getElementById((winNum-1) + "Div").appendChild(select1);
+        document.getElementById((winNum==0?0:winNum-1) + "Div").appendChild(select1);
     };
     function LanguageChoose(x, y, alreadyWent=false){
-
-        document.getElementById((winNum-1)+"Div").innerHTML = "";
+        document.getElementById((winNum==0?0:winNum-1)+"Div").innerHTML = "";
                 createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
                 }, "gray");;
+                createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "gray");
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "#b0b0b0");
-                ctx.clearRect(x+301, y+69, 900, 400);
+                ctx.clearRect(x+301, y+69, 1000, 600);
                 ctx.font = "25px Helvetica";
                 ctx.fillText(language=='English'?list[1][0]:list[1][1]+": ", x+301, y+100);
                 var dropDown = CreateDropDown(x+500, y+100);
@@ -241,7 +254,7 @@
                         }
                     };
                 });
-                document.getElementById((winNum-1)+"ImportantDiv").appendChild(dropDown);
+                document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").appendChild(dropDown);
     };
     function Setup(x, y, width, height, title, win){
         if (win.name == "RedGame"){
@@ -253,9 +266,9 @@
             // Create Select
             select = CreateDropDown(x+20, y+150)
             select.innerHTML = "<option value=0 selected>"+(language=="English"?"None":"இல்லை")+"</option><option value=1>"+(language=="English"?"TVA":"டிவிஏ")+"</option><option value=2>"+(language=="English"?"Epic Games":"அருமையான விளையாட்டுகள்")+"</option>";
-            document.getElementById((winNum-1)+"ImportantDiv").appendChild(select);
+            document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").appendChild(select);
             select.addEventListener("change", (event)=>{
-                document.getElementById((winNum-1) + "Div").innerHTML = "";
+                document.getElementById((winNum==0?0:winNum-1) + "Div").innerHTML = "";
                 select.children[0].remove();
                 if (select.value == 1){
                     LoginApp(x, y, "TVA");
@@ -274,72 +287,88 @@
             ctx.fillRect(x+50, y+100, 100, 40);
             ctx.font = "25px Helvetica";
             ctx.fillText(language=='English'?"Lockscreen: ":"பூட்டுத்திரை: ", x+301, y+100);
-            list = [["Personalization", "தனிப்படுத்தல்"], ["Language", "மொழி"]];
+            list = [["Personalization", "தனிப்படுத்தல்"], ["Language", "மொழி"], ["Settings", "அமைப்புகள்"]];
                 createOnClickButton(x+450, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "black";
+                    lockscreen.type="color";lockscreen.color = "black";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "black");
                 createOnClickButton(x+490, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "green";
+                    lockscreen.type="color";lockscreen.color = "green";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "green");
                 createOnClickButton(x+530, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "red";
+                    lockscreen.type="color";lockscreen.color = "red";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "red");
                 createOnClickButton(x+570, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "blue";
+                    lockscreen.type="color";lockscreen.color = "blue";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "blue");
                 createOnClickButton(x+610, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "white";
+                    lockscreen.type="color";lockscreen.color = "white";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "white");
-                ctx.fillStyle = "black";
-                ctx.rect(x+610, y+70, 40, 40);
-                ctx.stroke();
+                ctx.fillStyle = "black";  
+                ctx.fillRect(x+610, y+70, 40, 40);
+                ctx.clearRect(x+613, y+71, 36, 38); 
             createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
-                document.getElementById((winNum-1)+"ImportantDiv").innerHTML = "";
+                document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").innerHTML = "";
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
+                createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[1][1], "gray");
                 createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
                 }, "#b0b0b0");
-                ctx.clearRect(x+301, y+70, 900, 400);
+                ctx.clearRect(x+301, y+70, 1000, 400);
                 ctx.font = "25px Helvetica";
                 ctx.fillText(language=='English'?"Lockscreen: ":"பூட்டுத்திரை: ", x+301, y+100);
                 createOnClickButton(x+450, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "black";
+                    lockscreen.type="color";lockscreen.color = "black";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "black");
                 createOnClickButton(x+490, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "green";
+                    lockscreen.type="color";lockscreen.color = "green";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "green");
                 createOnClickButton(x+530, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "red";
+                    lockscreen.type="color";lockscreen.color = "red";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "red");
                 createOnClickButton(x+570, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "blue";
+                    lockscreen.type="color";lockscreen.color = "blue";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "blue");
                 createOnClickButton(x+610, y+70, 40, 40, "     ", ()=>{
-                    lockscreen.color = "white";
+                    lockscreen.type="color";lockscreen.color = "white";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "white");
-                ctx.fillStyle = "black";
-                ctx.rect(x+610, y+70, 40, 40);
-                ctx.stroke();
+                ctx.fillStyle = "black";  
+                ctx.fillRect(x+610, y+70, 40, 40);
+                ctx.clearRect(x+613, y+71, 36, 38);  
             }, "#b0b0b0");
             createOnClickButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], (ev)=>{
                 LanguageChoose(x, y);
+            });
+            createOnClickButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], (ev)=>{
+                document.getElementById((winNum==0?0:winNum-1)+"Div").innerHTML = "";
+                document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").innerHTML = "";
+                createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
+                }, "gray");;
+                createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "#b0b0b0");
+                createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
+                ctx.clearRect(x+301, y+69, 900, 400);
+                createOnClickButton(x+400, y+200, 300, 40, language=="English"?"Reset":"மீட்டமை", (ev)=>{
+                    createOnClickButton(x+1000, y+250, 300, 40, language=="English"?"Are you sure?":"உங்களுக்கு அது நல்லா தெரியுமா?", (ev)=>{
+                        localStorage.clear();
+                        window.location.reload();
+                    }, "green");
+                });
             });
         };
     };
     function MoveLeft(layer){
         winNum--;
-        if (document.getElementById((winNum-1) + "Div") && document.getElementById((winNum-1) + "ImportantDiv")) {
-        document.getElementById((winNum-1) + "Div").removeAttribute("hidden");
-        document.getElementById((winNum-1) + "ImportantDiv").removeAttribute("hidden");
+        if (document.getElementById((winNum==0?0:winNum-1) + "Div") && document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv")) {
+        document.getElementById((winNum==0?0:winNum-1) + "Div").removeAttribute("hidden");
+        document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").removeAttribute("hidden");
         }
         if (layer == -1 && layer < windows.length){
             if (windows.length != 1) {
@@ -358,7 +387,7 @@
         }
 
         clickableElements.splice(2);
-        x = 0, y=40, width=1400, height=700;
+        x = 0, y=40, width=1450, height=710;
                 win = windows[layer];
                 createClick(x+width-90, y, 10, 30, ()=>{
                     if (layer == 0){
@@ -377,9 +406,9 @@
     };
     function MoveRight(layer){
         if (layer != -1 && layer < windows.length){
-            console.log(document.getElementById((winNum-1) + "ImportantDiv"));
-            document.getElementById((winNum-1) + "Div").hidden = "true";
-            document.getElementById((winNum-1) + "ImportantDiv").hidden = "true";
+            console.log(document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv"));
+            document.getElementById((winNum==0?0:winNum-1) + "Div").hidden = "true";
+            document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").hidden = "true";
             if (document.getElementById((winNum) + "Div")) {
             document.getElementById((winNum) + "Div").removeAttribute("hidden");
             document.getElementById((winNum) + "ImportantDiv").removeAttribute("hidden");
@@ -411,15 +440,20 @@
     };
     function CloseWindow(win, x, y, width, height){
         // win.ImageData = ctx.getImageData(x, y, width, height);
-        if (document.getElementById((winNum-1) + "Div")) {
-            document.getElementById((winNum-1) + "Div").innerHTML = "";
-            document.getElementById((winNum-1)+"ImportantDiv").remove();
+        if (document.getElementById((winNum==0?0:winNum-1) + "Div")) {
+            document.getElementById((winNum==0?0:winNum-1) + "Div").remove();
+            document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").remove();
             ;
         };
         win.title = "";
+        winNum--;
         ctx.clearRect(x, y, width, height);
-        ctx.fillStyle = lockscreen.color;
-        ctx.fillRect(0, 40, 1450, 710);
+        if (lockscreen.type == "color") {
+            ctx.fillStyle = lockscreen.color;
+            ctx.fillRect(0, 40, 1450, 710);
+        }else if (lockscreen.type == "picture"){
+                ctx.drawImage(document.getElementById("L"+lockscreen.color), 0, 40, 1450, 710);
+        }
         for (let i = windows.length - 1; i >= 0; i--) {
             if (windows[i] == win) {
                 windows.splice(i, 1); // Remove element at index i
@@ -428,21 +462,20 @@
         }
         // windows = windows.filter(item => item.name !== "HIII")
         // ctx.clearRect(windows.length * 100, 30, ctx.measureText(winname).width(), 30);
-        console.log(clickableElements, windows);
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, 1700, 40);
         ctx.fillStyle = "white";
         var idx = 0
-            ctx.font = "10px Arial";
+            ctx.font = "20px Arial";
         windows.forEach((el) => {
             ctx.fillText(String(el.winname), idx * 100, 30);
             idx = idx + 1
         });
     };
     function Window1(x, y, width, height, title, win){
-        if (document.getElementById((winNum-1) + "Div") && document.getElementById((winNum-1) + "ImportantDiv")) {
-            document.getElementById((winNum-1) + "Div").hidden = "true";
-            document.getElementById((winNum-1) + "ImportantDiv").hidden = "true";
+        if (document.getElementById((winNum==0?0:winNum-1) + "Div") && document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv")) {
+            document.getElementById((winNum==0?0:winNum-1) + "Div").hidden = "true";
+            document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").hidden = "true";
         }
         winNum++;
         clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":160,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":220,\"y\":747,\"width\":40,\"height\":40,\"code\":2},{\"x\":270,\"y\":750,\"width\":36,\"height\":36,\"code\":3}]");
@@ -458,12 +491,14 @@
         clickableElements[3].functionOnClicked = (event) => {
             Game("Settings");
         };
-        span = document.createElement("span");
-        span.id = win.id+"Div";
-        document.getElementById("List").appendChild(span);
-        span = document.createElement("span");
-        span.id = win.id+"ImportantDiv";
-        document.getElementById("ImportantList").appendChild(span);
+        if (!document.getElementById(win.id+"Div")) {
+            span = document.createElement("span");
+            span.id = win.id+"Div";
+            document.getElementById("List").appendChild(span);
+            span = document.createElement("span");
+            span.id = win.id+"ImportantDiv";
+            document.getElementById("ImportantList").appendChild(span);
+        }
         ctx.clearRect(0, 40, 1450, 710);
         Setup(x, y, width, height, title, win);
         win.ImageData = ctx.getImageData(x, y, width, height);
@@ -487,7 +522,6 @@
         });
         createClick(x+width-30, y, 10, 30, ()=>{
             CloseWindow(win, x, y, width, height);
-            document.getElementById((winNum - 1) + "Div").innerHTML = "";
         });
         createClick(x+width-60, y, 10, 30, ()=>{
             console.log("BOX");
@@ -497,6 +531,7 @@
         winname = windows.length;
         ctx.clearRect(0, 40, 1450, 710);
         ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
         ctx.fillText(winname, windows.length * 100, 30);
         win = {name:name, layer:windows.length, id:windows.length, winname:winname};
         windows.push(win);
@@ -510,12 +545,14 @@
         minutes = minutes < 10 ? '0' + minutes : minutes;
         fill = ctx.fillStyle;
         ctx.fillStyle = "grey";
-        // ctx.clearRect(0, 0, ctx.measureText("24:24"),40); // WRONG
         ctx.fillRect(100, 750, 60, 60);
-        ctx.fillStyle = fill;
+        console.log(ctx.font);
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
         ctx.fillText(hours+":"+minutes, 100, 780);
+        ctx.fillStyle = fill;
         console.log("HI");
-    }, 1000);
+    }, 60000);
     if (!localStorage.OSBooted) {
         localStorage.OSBooted = true;
         ctx.rect(10,15,300,200);
@@ -612,6 +649,8 @@
         let hours = now.getHours(); // Get the current hour (0-23)
         let minutes = now.getMinutes(); // Get the current minutes (0-59)
         minutes = minutes < 10 ? '0' + minutes : minutes;
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black";
         ctx.fillText(hours+":"+minutes, 100, 780);
 
         document.getElementById("star").addEventListener("load", (e) => {
