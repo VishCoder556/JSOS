@@ -988,6 +988,7 @@ function drawFirstFrame() {
             if(event.keyCode == 89 && event.ctrlKey){
                 if (_ImageData) {
                     ctx.putImageData(_ImageData, 0, 0);
+                    ctx.restore();
                     for (i=0; i<=inputNum-1; i++){
                         console.log(document.getElementById(i+"Id"));
                         document.getElementById(i+"Id").removeAttribute("hidden");
@@ -1000,6 +1001,7 @@ function drawFirstFrame() {
                         document.getElementById(i+"Id").hidden = "true";
                     };
                     var x = 50, y = 50;
+                    ctx.save();
                     windows.forEach((item) => {
                         ctx.rect(x, y, 100, 100);
                         ctx.fillText(item.name, x+5, y + 25);
