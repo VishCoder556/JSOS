@@ -314,7 +314,7 @@
             createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
                 document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").innerHTML = "";
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
-                createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[1][1], "gray");
+                createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "gray");
                 createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
                 }, "#b0b0b0");
                 ctx.clearRect(x+301, y+70, 1000, 400);
@@ -560,6 +560,16 @@
         ctx.fillText("Welcome To", 80, 50);
         ctx.font = "50px Arial";
         ctx.fillText("VishnuOS", 50, 100);
+        drop = CreateDropDown(500, 100);
+        drop.innerHTML = "<option value=1 selected>English</option><option value=2>தமிழ்</option>";
+        drop.id = "SpecialDrop";
+        drop.addEventListener("change", ()=>{
+            if (drop.value == 2){
+                window.location.reload();
+                localStorage.language = "Tamil";
+            };
+        });
+        document.body.appendChild(drop);
         createOnClickButton(105, 150, 100, 40, "Tutorial", (click) => {
             ctx.clearRect(0, 0, 1000, 1000);
             ctx.fillText("No thank you. Just go back. At least you learned that Ctrl-Y opens the view to see your windows! Also Esc brings you to the page mode where you can choose", 40, 50, 2000);
