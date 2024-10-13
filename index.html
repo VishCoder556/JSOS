@@ -10,6 +10,7 @@
 <img id="star" width="200" height="220" src="assets/star.png" hidden>
 <img id="login" width="200" height="220" src="assets/login.png" hidden>
 <img id="settings" width="200" height="220" src="assets/settings.png" hidden>
+<img id="terminal" width="200" height="220" src="assets/terminal.png" hidden>
 <span id="landscapes" hidden>
     <img id="L1" width="200" height="220" src="assets/landscapes/1.jpeg" hidden>
     <img id="L2" width="200" height="220" src="assets/landscapes/2.jpeg" hidden>
@@ -287,7 +288,61 @@ function getOSDetails() {
 
 
     function Setup(x, y, width, height, title, win){
-        if (win.name == "RedGame"){
+        if(win.name == "Terminal"){
+            var textarea = document.createElement("textarea")
+            textarea.id = "Terminal"+winNum+"Id";
+            textarea.style.position = "absolute";
+            textarea.style.left = (x+7) + 'px';
+            textarea.style.top = (y+37) + 'px';
+            textarea.spellcheck = "false";
+            textarea.style.width = (width-4) + "px";
+            textarea.style.height = (height-33) + "px";
+            textarea.style.resize = "none";
+            textarea.style.backgroundColor = "#545454";
+            textarea.value += "vishnu@comp: ";
+            textarea.style.outline = "none";
+            textarea.addEventListener("keydown", (ev)=>{
+                if(ev.key === "Enter"){
+                    program = textarea.value.split("\n")[textarea.value.split("\n").length-1].substring("vishnu@comp: ".length);
+                    base_command = program.split(" ")[0];
+                    textarea.value += "\n";
+                    var output = "";
+                    try {
+                        if (base_command == "man" || base_command == "help"){
+                            if (program.split(" ").length > 2){
+                                output += "error: More than 2 arguments"+"\n";
+                            }else {
+                                if (program.split(" ")[1] == "terminal"){
+                                    output += "The page you're on";
+                                };
+                                output += "\n";
+                            };
+                        }else if(base_command == "echo" || base_command == "print"){
+                            var args = program.split(" ");
+                            args.splice(0, 1);
+                            args.forEach((item)=>{
+                                output += eval(item) + " ";
+                            });
+                            output += "\n";
+                        };
+                    } catch (e){
+                        output += "error: " + e.message+"\n";
+                    }
+                    textarea.value += output;
+                    if (output[output.length] == "\n") {
+                    textarea.value += "\n";
+                    };
+                    textarea.value += "vishnu@comp: ";
+                    ev.preventDefault();
+                }else if(ev.key=="Backspace"){
+                    if(textarea.value.split("\n")[textarea.value.split("\n").length - 1] == 'vishnu@comp: '){
+                        ev.preventDefault();
+                    }
+                };
+            });
+            document.getElementById((winNum-1)+"Div").appendChild(textarea);
+            ctx.fillStyle = "white";
+        }else if (win.name == "RedGame"){
             ctx.font = "80px Roboto";
             ctx.fillText(language=="English"?"Games":"விளையாட்டு", x, y+100);
             ctx.font = "20px Arial";
@@ -333,6 +388,7 @@ function getOSDetails() {
             });
             // Add input
         }else if(win.name == "Settings"){
+            ctx.clearRect(x, y, width, height);
             ctx.font = "30px Helvetica";
             ctx.fillStyle = "grey";
             ctx.fillRect(x+1, y+30, 300, 670);
@@ -461,7 +517,7 @@ function getOSDetails() {
                 layer = 1;
             }
         };
-        windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
+        windows[layer].ImageData = ctx.getImageData(0, 40, 1450, 700);
         console.log(windows[layer-1].ImageData, windows[layer].ImageData);
         if(layer > 0){
             ctx.putImageData(windows[layer-1].ImageData, 0, 40);
@@ -499,13 +555,13 @@ function getOSDetails() {
             document.getElementById((winNum) + "ImportantDiv").removeAttribute("hidden");
             }
             winNum++;
-            windows[layer].ImageData = ctx.getImageData(0, 40, 1400, 700);
+            windows[layer].ImageData = ctx.getImageData(0, 40, 1450, 700);
             if (layer + 1 != windows.length) {
                 ctx.putImageData(windows[layer+1].ImageData, 0, 40);
                 layer++;
                 clickableElements.splice(2);
                 win = windows[layer];
-                x = 0, y=40, width=1400, height=700;
+                x = 0, y=40, width=1450, height=700;
                 createClick(x+width-90, y, 10, 30, ()=>{
                     if (layer == 0){
                         layer = MoveRight(win.layer);
@@ -563,7 +619,8 @@ function getOSDetails() {
             document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").hidden = "true";
         }
         winNum++;
-        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":160,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":220,\"y\":747,\"width\":40,\"height\":40,\"code\":2},{\"x\":270,\"y\":750,\"width\":36,\"height\":36,\"code\":3}]");
+        console.log(JSON.stringify(clickableElements));
+        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":160,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":220,\"y\":747,\"width\":40,\"height\":40,\"code\":2},{\"x\":270,\"y\":750,\"width\":36,\"height\":36,\"code\":3},{\"x\":320,\"y\":750,\"width\":36,\"height\":36,\"code\":4}]");
         clickableElements[0].functionOnClicked = (event) => {
             console.log("Opening the time");
         };
@@ -575,6 +632,9 @@ function getOSDetails() {
         };
         clickableElements[3].functionOnClicked = (event) => {
             Game("Settings");
+        };
+        clickableElements[4].functionOnClicked = (event) => {
+            Game("Terminal");
         };
         if (!document.getElementById(win.id+"Div")) {
             span = document.createElement("span");
@@ -617,8 +677,8 @@ function getOSDetails() {
         ctx.clearRect(0, 40, 1450, 710);
         ctx.fillStyle = "white";
         ctx.font = "20px Arial";
-        ctx.fillText(winname, windows.length * 100, 30);
-        win = {name:name, layer:windows.length, id:windows.length, winname:winname};
+        ctx.fillText(name, windows.length * 100, 30);
+        win = {name:name, layer:windows.length, id:windows.length, winname:name};
         windows.push(win);
         ctx.fillStyle = "black";
         Window1(0, 40, 1450, 710, winname, win);
@@ -697,7 +757,7 @@ function getOSDetails() {
                     };
                     _ImageData = 0;
                 }else {
-                    _ImageData = ctx.getImageData(0, 0, 1700, 930);
+                    _ImageData = ctx.getImageData(0, 0, 1700, 1000);
                     ctx.clearRect(0, 0, 1700, 930);
                     for (i=0; i<=inputNum-1; i++){
                         console.log(document.getElementById(i+"Id"));
@@ -722,8 +782,6 @@ function getOSDetails() {
             }else if(event.ctrlKey && event.key === 'w'){
                 ev.preventDefault();
                 alert("HII");
-            }else{
-                console.log(event.keyCode);
             };
         });
         LockScreen();
@@ -766,6 +824,12 @@ function getOSDetails() {
             ctx.drawImage(document.getElementById("settings"), 270, 750, 36, 36);
             createClick(270, 750, 36, 36, ()=>{
                 Game("Settings");
+            });
+        })
+        document.getElementById("terminal").addEventListener("load", (e) => {
+            ctx.drawImage(document.getElementById("terminal"), 320, 750, 36, 36);
+            createClick(320, 750, 36, 36, ()=>{
+                Game("Terminal");
             });
         })
     }
