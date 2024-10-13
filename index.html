@@ -171,9 +171,9 @@
         select1.addEventListener("change", (event)=>{
             document.getElementById((winNum==0?0:winNum-1) + "Div").innerHTML = "";
             document.getElementById((winNum==0?0:winNum-1) + "Div").appendChild(select1);
-            ctx.clearRect(x+1, y+310, 1449, 900);
-            ctx.clearRect(x+2, y+250, 500, 900);
-            ctx.clearRect(x+2, y+1, 1450, 900);
+            // ctx.clearRect(x+1, y+310, 1449, 900);
+            // ctx.clearRect(x+2, y+250, 500, 500);
+            ctx.clearRect(x+2, y+100, 1450, 500);
             ctx.clearRect(x, y+380, 200, 300);
             ctx.clearRect(x+500, y+600, 500, 80);
             ctx.clearRect(x+1000, y+600, 300, 40);
