@@ -814,10 +814,17 @@ function getOSDetails() {
                 };
             }else if(event.key == "ArrowLeft" || event.key == "ArrowRight"){
                 if(document.getElementById("Terminal"+winNum+"Id")){
+                    textareaValue = document.getElementById("Terminal"+winNum+"Id").value;
+                    console.log(textareaValue);
                     const cursorPosition = document.getElementById("Terminal"+winNum+"Id").selectionStart;
-                    if (cursorPosition <= "vishnu@comp: ".length && document.getElementById("Terminal"+winNum+"Id").value.startsWith("vishnu@comp: ")) {
-                        event.preventDefault();
-                    };
+                    if (textareaValue.includes("vishnu@comp: ")) {
+                        const lastIndex = textareaValue.lastIndexOf("vishnu@comp: ");
+                        const prefixLength = "vishnu@comp: ".length;
+
+                        if (cursorPosition <= lastIndex + prefixLength) {
+                            event.preventDefault();
+                        }
+                    }
                 };
             };
         });
