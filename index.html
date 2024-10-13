@@ -265,7 +265,7 @@
             ctx.fillText("Login", x, y+100);
             // Create Select
             select = CreateDropDown(x+20, y+150)
-            select.innerHTML = "<option value=0 selected>"+(language=="English"?"None":"இல்லை")+"</option><option value=1>"+(language=="English"?"TVA":"டிவிஏ")+"</option><option value=2>"+(language=="English"?"Epic Games":"அருமையான விளையாட்டுகள்")+"</option>";
+            select.innerHTML = "<option value=0 selected>"+(language=="English"?"None":"இல்லை")+"</option><option value=1>"+(language=="English"?"TVA":"டிவிஏ")+"</option><option value=2>"+(language=="English"?"Epic Sites":"அருமையான விளையாட்டுகள்")+"</option>";
             document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").appendChild(select);
             select.addEventListener("change", (event)=>{
                 document.getElementById((winNum==0?0:winNum-1) + "Div").innerHTML = "";
@@ -406,6 +406,7 @@
     };
     function MoveRight(layer){
         if (layer != -1 && layer < windows.length){
+            console.log(winNum);
             console.log(document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv"));
             document.getElementById((winNum==0?0:winNum-1) + "Div").hidden = "true";
             document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").hidden = "true";
