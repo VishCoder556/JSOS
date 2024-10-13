@@ -733,7 +733,8 @@ function drawFirstFrame() {
                 ctx.fillText(language=="English"?"Partially allied with TVA (Timeless Vision Association) Inc. (Contract was not yet created)":"டிவிஏ உடன் ஓரளவு இணைந்துள்ளது (ஒப்பந்தம் இன்னும் உருவாக்கப்படவில்லை)", x+310, y+170);
                 ctx.fillText(language=="English"?"All Rights Reserved":"அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை", x+310, y+200);
                 ctx.fillText("1.0.0", x+310, y+230);
-                ctx.fillText(language=="English"?"Running on ":"உங்கள் கணினி " + getOSDetails(), x+310, y+500);
+                console.log(getOSDetails());
+                ctx.fillText((language=="English"?"Running on ":"உங்கள் கணினி ") + getOSDetails(), x+310, y+500);
             });
         };
     };
