@@ -18,6 +18,9 @@
     <img id="L5" width="200" height="220" src="assets/landscapes/5.webp" hidden>
     <img id="L6" width="200" height="220" src="assets/landscapes/6.jpeg" hidden>
 </span>
+<span id="games" hidden>
+    <img id="Sudoku" width="200" height="220" src="assets/games/Sudoku/icon.png" hidden>
+</span>
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
     <div id="List"></div>
@@ -261,6 +264,30 @@
             ctx.font = "80px Roboto";
             ctx.fillText(language=="English"?"Games":"விளையாட்டு", x, y+100);
             ctx.font = "20px Arial";
+            ctx.fillStyle = "gray";
+            ctx.fillRect(x+20, y+120, 100, 100);
+            ctx.drawImage(document.getElementById("Sudoku"), x+20, y+150, 100, 70);
+            createClick(160, 743, 48, 48, ()=>{
+                Game("RedGame");
+            });
+            createOnClickButton(x+20, y+120, 100, 40, "Sudoku", ()=>{
+                ctx.clearRect(x-100, y+30, 700, 60);
+                var iframe = document.createElement("iframe");
+                iframe.src = "sudoku/index.html";
+                iframe.style.position = 'absolute';
+                iframe.style.left = (x+13 - 4) + 'px';
+                iframe.style.top = (y+64 - 4) + 'px';
+                iframe.id = (winNum-1)+"Id"+"Sudoku";
+                iframe.width = "1438px";
+                iframe.height = "650px";
+                createOnClickButton(1400, y+34, 40, 20, "x", ()=>{
+                    ctx.font = "80px Roboto";
+                    ctx.fillText(language=="English"?"Games":"விளையாட்டு", x, y+100);
+                    ctx.font = "20px Arial";
+                    iframe.remove();
+                });
+                document.getElementById((winNum-1)+"Div").appendChild(iframe);
+            });
         }else if(win.name == "Login"){
             ctx.fillText("Login", x, y+100);
             // Create Select
