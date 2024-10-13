@@ -453,6 +453,8 @@ function getOSDetails() {
                                 }
                             }
                             
+                        }else if (base_command === "clear") {
+                            document.getElementById("Terminal"+winNum+"Id").value = "";
                         }
                         return output;
     };
@@ -477,7 +479,7 @@ function getOSDetails() {
                     base_command = program.split(" ")[0];
                     textarea.value += "\n";
                     var output = "";
-                    // try {
+                    try {
                         if (program.split(" ").length > 3){
                             if (program.split(" ")[program.split(" ").length - 2] == "<"){
                                 let currentDirectory = file_dir["/"];
@@ -505,9 +507,9 @@ function getOSDetails() {
                         }else {;
                             output = RunCommand(base_command, program);
                         }
-                    // } catch (e){
-                    //     output += "error: " + e.message+"\n";
-                    // }
+                    } catch (e){
+                        output += "error: " + e.message+"\n";
+                    }
                     textarea.value += output;
                     if (output[output.length] == "\n") {
                     textarea.value += "\n";
