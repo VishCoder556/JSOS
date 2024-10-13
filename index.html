@@ -286,6 +286,34 @@ function getOSDetails() {
     return os;
 }
 
+    function echo(input) {
+        // Split the input based on spaces while keeping quoted strings together
+        const parts = input.match(/"([^"]+)"|[^\s]+/g);
+        parts.splice(0, 1);
+        
+        let output = [];
+
+        // Loop through the matched parts
+        for (const part of parts) {
+            // Check if the part is a quoted string
+            if (part.startsWith('"') && part.endsWith('"')) {
+                output.push(part.slice(1, -1)); // Remove the quotes
+            } else if (part.includes("+") || part.includes("-") || part.includes("*") || part.includes("/")){
+                // Try to evaluate the part as an expression
+                let evaluated;
+                try {
+                    evaluated = evaluateExpression(part);
+                    output.push(evaluated);
+                } catch (e) {
+                    // If evaluation fails, push the original part
+                    output.push(part);
+                }
+            }else {
+                return "error: No support for statement";
+            };
+        }
+        return output.join(' '); // Join the output with spaces
+    }
 
     function Setup(x, y, width, height, title, win){
         if(win.name == "Terminal"){
@@ -295,8 +323,8 @@ function getOSDetails() {
             textarea.style.left = (x+7) + 'px';
             textarea.style.top = (y+37) + 'px';
             textarea.spellcheck = "false";
-            textarea.style.width = (width-4) + "px";
-            textarea.style.height = (height-33) + "px";
+            textarea.style.width = (width-15-4) + "px";
+            textarea.style.height = (height-50) + "px";
             textarea.style.resize = "none";
             textarea.style.backgroundColor = "#545454";
             textarea.value += "vishnu@comp: ";
@@ -318,11 +346,8 @@ function getOSDetails() {
                                 output += "\n";
                             };
                         }else if(base_command == "echo" || base_command == "print"){
-                            var args = program.split(" ");
-                            args.splice(0, 1);
-                            args.forEach((item)=>{
-                                output += eval(item) + " ";
-                            });
+                            res = echo(program);
+                            output += res;
                             output += "\n";
                         };
                     } catch (e){
@@ -518,7 +543,6 @@ function getOSDetails() {
             }
         };
         windows[layer].ImageData = ctx.getImageData(0, 40, 1450, 700);
-        console.log(windows[layer-1].ImageData, windows[layer].ImageData);
         if(layer > 0){
             ctx.putImageData(windows[layer-1].ImageData, 0, 40);
         }
@@ -546,8 +570,6 @@ function getOSDetails() {
     };
     function MoveRight(layer){
         if (layer != -1 && layer < windows.length){
-            console.log(winNum);
-            console.log(document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv"));
             document.getElementById((winNum==0?0:winNum-1) + "Div").hidden = "true";
             document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").hidden = "true";
             if (document.getElementById((winNum) + "Div")) {
@@ -683,6 +705,12 @@ function getOSDetails() {
         ctx.fillStyle = "black";
         Window1(0, 40, 1450, 710, winname, win);
     };
+    function evaluateExpression(expression) {
+        // Remove spaces and replace with the correct operator
+        expression = expression.replace(/\s+/g, ''); // Remove all whitespace
+        // Basic evaluation of the expression using the Function constructor
+        return Function('"use strict";return (' + expression + ')')();
+    }
     setInterval(()=>{
         const now = new Date(); // Get the current date and time
         let hours = now.getHours(); // Get the current hour (0-23)
@@ -760,7 +788,6 @@ function getOSDetails() {
                     _ImageData = ctx.getImageData(0, 0, 1700, 1000);
                     ctx.clearRect(0, 0, 1700, 930);
                     for (i=0; i<=inputNum-1; i++){
-                        console.log(document.getElementById(i+"Id"));
                         document.getElementById(i+"Id").hidden = "true";
                     };
                     var x = 50, y = 50;
@@ -780,8 +807,18 @@ function getOSDetails() {
             }else if(event.keyCode == 37 && mode == 1){ // Left
                 layer = MoveLeft(layer);
             }else if(event.ctrlKey && event.key === 'w'){
-                ev.preventDefault();
-                alert("HII");
+                event.preventDefault();
+            }else if(event.key == "ArrowUp" || event.key == "ArrowDown"){
+                if(document.getElementById("Terminal"+winNum+"Id")){
+                    event.preventDefault();
+                };
+            }else if(event.key == "ArrowLeft" || event.key == "ArrowRight"){
+                if(document.getElementById("Terminal"+winNum+"Id")){
+                    const cursorPosition = document.getElementById("Terminal"+winNum+"Id").selectionStart;
+                    if (cursorPosition <= "vishnu@comp: ".length && document.getElementById("Terminal"+winNum+"Id").value.startsWith("vishnu@comp: ")) {
+                        event.preventDefault();
+                    };
+                };
             };
         });
         LockScreen();
@@ -834,6 +871,16 @@ function getOSDetails() {
         })
     }
 </script>
+
+<style>
+    textarea {
+        font-family: Arial, sans-serif; /* Font styling */
+        font-size: 16px; /* Font size */
+        padding: 10px; /* Padding for aesthetics */
+        outline: none; /* Remove the outline on focus */
+        white-space: pre-wrap; /* Maintain whitespace formatting */
+    }
+</style>
 
 </body>
 </html>
