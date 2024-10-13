@@ -314,6 +314,11 @@ function getOSDetails() {
         }
         return output.join(' '); // Join the output with spaces
     }
+    var file_dir = {"/": {
+        name: "/",
+        contents: []
+    }};
+    var current_dir = ["/"];
 
     function Setup(x, y, width, height, title, win){
         if(win.name == "Terminal"){
@@ -349,7 +354,84 @@ function getOSDetails() {
                             res = echo(program);
                             output += res;
                             output += "\n";
-                        };
+                        }else if (base_command === "mkdir") {
+                            const dirName = program.split(" ")[1];
+
+                            if (!dirName) {
+                                output += "error: Must provide a name for the directory" + "\n";
+                            } else {
+                                // Get the current directory object based on the current_dir array
+                                let currentDirectory = file_dir["/"];
+
+                                for (let i = 1; i < current_dir.length; i++) {
+                                    const dirNameInPath = current_dir[i];
+                                    const foundDir = currentDirectory.contents.find(item => item.name === dirNameInPath);
+                                    if (foundDir) {
+                                        currentDirectory = foundDir; // Move deeper into the directory structure
+                                    } else {
+                                        break; // Directory not found, exit the loop
+                                    }
+                                }
+
+                                // Check if the directory already exists
+                                const exists = currentDirectory.contents.some(item => item.name === dirName);
+                                if (exists) {
+                                    output += `error: Directory '${dirName}' already exists` + "\n";
+                                } else {
+                                    // Add new directory with empty contents
+                                    currentDirectory.contents.push({ name: dirName, contents: [] });
+                                    output += `Directory '${dirName}' created` + "\n";
+                                }
+                            }
+                        } else if (base_command === "ls") {
+                            let currentDirectory = file_dir["/"];
+                            
+                            for (let i = 1; i < current_dir.length; i++) {
+                                const dirNameInPath = current_dir[i];
+                                const foundDir = currentDirectory.contents.find(item => item.name === dirNameInPath);
+                                if (foundDir) {
+                                    currentDirectory = foundDir; // Move deeper into the directory structure
+                                } else {
+                                    break; // Directory not found, exit the loop
+                                }
+                            }
+
+                            if (currentDirectory.contents.length === 0) {
+                                output += "No contents found in current directory" + "\n";
+                            } else {
+                                currentDirectory.contents.forEach(item => {
+                                    output += item.name + "   "; // List items in the current directory
+                                });
+                                output += "\n";
+                            }
+                        } else if (base_command === "cd") {
+                            const dirName = program.split(" ")[1];
+
+                            if (!dirName) {
+                                output += "error: Must provide a name for the directory" + "\n";
+                            } else {
+                                let currentDirectory = file_dir["/"];
+
+                                for (let i = 1; i < current_dir.length; i++) {
+                                    const dirNameInPath = current_dir[i];
+                                    const foundDir = currentDirectory.contents.find(item => item.name === dirNameInPath);
+                                    if (foundDir) {
+                                        currentDirectory = foundDir; // Move deeper into the directory structure
+                                    } else {
+                                        break; // Directory not found, exit the loop
+                                    }
+                                }
+
+                                // Check if the directory exists in the current path
+                                const dirExists = currentDirectory.contents.some(item => item.name === dirName);
+                                if (dirExists) {
+                                    current_dir.push(dirName); // Move into the directory
+                                    output += `Changed directory to '${dirName}'` + "\n";
+                                } else {
+                                    output += `error: Directory '${dirName}' does not exist` + "\n";
+                                }
+                            }
+                        }
                     } catch (e){
                         output += "error: " + e.message+"\n";
                     }
@@ -826,6 +908,10 @@ function getOSDetails() {
                         }
                     }
                 };
+            }else if(event.ctrlKey && event.key=="c"){
+                if(document.getElementById("Terminal"+winNum+"Id")){
+                    document.getElementById("Terminal"+winNum+"Id").value += "^C\nvishnu@comp: ";
+                }
             };
         });
         LockScreen();
