@@ -329,6 +329,8 @@ function getOSDetails() {
                             }else {
                                 if (program.split(" ")[1] == "terminal"){
                                     output += "The page you're on";
+                                }else if(program.split(" ")[1] == "all"){
+                                    output += "echo prints something out\nmkdir creates a directory\ncd moves inside of directory\ncd moves into directory\bls shows you the files and directories of where you are at \nread reads a file\n< with file at end of command pipes to a file\n";
                                 };
                                 output += "\n";
                             };
@@ -410,7 +412,7 @@ function getOSDetails() {
                                     }
                                     i++;
                                 }
-                                if (currentDirectory.contents.some(item => item.name === dirName).type != "dir"){
+                                if (currentDirectory.contents.find(item => item.name === dirName).type != "dir"){
                                     output += `${dirName} is not a directory.\n`;
                                 }else {
                                     const dirExists = currentDirectory.contents.some(item => item.name === dirName);
