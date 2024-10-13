@@ -235,7 +235,8 @@
                 }, "gray");;
                 createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "gray");
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "#b0b0b0");
-                ctx.clearRect(x+301, y+69, 1000, 600);
+                createButton(x+1, y+250, 300, 40, language=='English'?list[3][0]:list[3][1], "gray");
+                ctx.clearRect(x+301, y+50, 900, 600);
                 ctx.font = "25px Helvetica";
                 ctx.fillText(language=='English'?list[1][0]:list[1][1]+": ", x+301, y+100);
                 var dropDown = CreateDropDown(x+500, y+100);
@@ -259,6 +260,32 @@
                 });
                 document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").appendChild(dropDown);
     };
+
+function getOSDetails() {
+    const userAgent = navigator.userAgent;
+
+    let os = "Unknown OS";
+
+    if (userAgent.includes("Windows NT")) {
+        os = "Windows";
+    } else if (userAgent.includes("Macintosh")) {
+        os = "Mac OS";
+    } else if (userAgent.includes("Linux")) {
+        os = "Linux";
+    } else if (userAgent.includes("Android")) {
+        os = "Android";
+    } else if (userAgent.includes("iPhone")) {
+        os = "iOS (iPhone)";
+    } else if (userAgent.includes("iPad")) {
+        os = "iOS (iPad)";
+    } else if (userAgent.includes("CrOS")) {
+        os = "Chrome OS (Chromebook)";
+    }
+
+    return os;
+}
+
+
     function Setup(x, y, width, height, title, win){
         if (win.name == "RedGame"){
             ctx.font = "80px Roboto";
@@ -314,7 +341,7 @@
             ctx.fillRect(x+50, y+100, 100, 40);
             ctx.font = "25px Helvetica";
             ctx.fillText(language=='English'?"Lockscreen: ":"பூட்டுத்திரை: ", x+301, y+100);
-            list = [["Personalization", "தனிப்படுத்தல்"], ["Language", "மொழி"], ["Settings", "அமைப்புகள்"]];
+            list = [["Personalization", "தனிப்படுத்தல்"], ["Language", "மொழி"], ["Settings", "அமைப்புகள்"], ["About", "பற்றி"]];
                 createOnClickButton(x+450, y+70, 40, 40, "     ", ()=>{
                     lockscreen.type="color";lockscreen.color = "black";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
@@ -335,6 +362,11 @@
                     lockscreen.type="color";lockscreen.color = "white";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "white");
+                    ctx.drawImage(document.getElementById("L5"), x+700, y+50, 100, 78);
+                createClick(x+700, y+50, 100, 78, ()=>{
+                    lockscreen.type="picture";lockscreen.color = "5";
+                    localStorage.lockscreen = JSON.stringify(lockscreen);
+                });
                 ctx.fillStyle = "black";  
                 ctx.fillRect(x+610, y+70, 40, 40);
                 ctx.clearRect(x+613, y+71, 36, 38); 
@@ -342,9 +374,10 @@
                 document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").innerHTML = "";
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
                 createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "gray");
+                createButton(x+1, y+250, 300, 40, language=='English'?list[3][0]:list[3][1], "gray");
                 createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
                 }, "#b0b0b0");
-                ctx.clearRect(x+301, y+70, 1000, 400);
+                ctx.clearRect(x+301, y+70, 1000, 600);
                 ctx.font = "25px Helvetica";
                 ctx.fillText(language=='English'?"Lockscreen: ":"பூட்டுத்திரை: ", x+301, y+100);
                 createOnClickButton(x+450, y+70, 40, 40, "     ", ()=>{
@@ -367,6 +400,11 @@
                     lockscreen.type="color";lockscreen.color = "white";
                     localStorage.lockscreen = JSON.stringify(lockscreen);
                 }, "white");
+                    ctx.drawImage(document.getElementById("L5"), x+700, y+50, 100, 78);
+                createClick(x+700, y+50, 100, 78, ()=>{
+                    lockscreen.type="picture";lockscreen.color = "5";
+                    localStorage.lockscreen = JSON.stringify(lockscreen);
+                });
                 ctx.fillStyle = "black";  
                 ctx.fillRect(x+610, y+70, 40, 40);
                 ctx.clearRect(x+613, y+71, 36, 38);  
@@ -381,13 +419,32 @@
                 }, "gray");;
                 createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "#b0b0b0");
                 createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
-                ctx.clearRect(x+301, y+69, 900, 400);
+                createButton(x+1, y+250, 300, 40, language=='English'?list[3][0]:list[3][1], "gray");
+                ctx.clearRect(x+301, y+50, 900, 600);
                 createOnClickButton(x+400, y+200, 300, 40, language=="English"?"Reset":"மீட்டமை", (ev)=>{
-                    createOnClickButton(x+1000, y+250, 300, 40, language=="English"?"Are you sure?":"உங்களுக்கு அது நல்லா தெரியுமா?", (ev)=>{
-                        localStorage.clear();
-                        window.location.reload();
-                    }, "green");
+                    if (confirm(language=="English"?"Are you sure? This will reset your entire OS.":"உங்களுக்கு அது நல்லா தெரியுமா? இது உங்கள் முழு கணினியையும் மீட்டமைக்கும்.")) {
+                        createOnClickButton(x+1000, y+250, 400, 40, language=="English"?"Are you really sure?":"அது உங்களுக்கு நன்றாகத் தெரியுமா?", (ev)=>{
+                            localStorage.clear();
+                            window.location.reload();
+                        }, "green");
+                    }
                 });
+            });
+            createOnClickButton(x+1, y+250, 300, 40, language=='English'?list[3][0]:list[3][1], (ev)=>{
+                document.getElementById((winNum==0?0:winNum-1)+"Div").innerHTML = "";
+                document.getElementById((winNum==0?0:winNum-1)+"ImportantDiv").innerHTML = "";
+                createOnClickButton(x+1, y+100, 300, 40, language=='English'?list[0][0]:list[0][1], (ev)=>{
+                }, "gray");;
+                createButton(x+1, y+150, 300, 40, language=='English'?list[2][0]:list[2][1], "gray");
+                createButton(x+1, y+200, 300, 40, language=='English'?list[1][0]:list[1][1], "gray");
+                createButton(x+1, y+250, 300, 40, language=='English'?list[3][0]:list[3][1], "#b0b0b0");
+                ctx.clearRect(301, 70, 900, 300);
+                ctx.fillText("ⓘ VishnuOS Computer", x+310, y+100);
+                ctx.fillText("© Epic Sites Inc.", x+310, y+130);
+                ctx.fillText("By: Vishnu Ramesh and Joey Matteucci", x+310, y+150);
+                ctx.fillText("Contract with TVA (Timeless Vision Association) Inc.", x+310, y+170);
+                ctx.fillText("All Rights Reserved", x+310, y+200);
+                ctx.fillText("Running on " + getOSDetails(), x+310, y+500);
             });
         };
     };
