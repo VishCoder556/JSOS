@@ -320,6 +320,12 @@ function getOSDetails() {
         type: "dir"
     }};
     var current_dir = ["/"];
+    if (localStorage.current_dir){
+        current_dir = JSON.parse(localStorage.current_dir);
+    }else if (localStorage.file_dir){
+        file_dir = JSON.parse(localStorage.file_dir);
+    };
+
 
     function RunCommand(base_command, program){ // Sorry for weird indentation
                         output = "";
@@ -368,6 +374,8 @@ function getOSDetails() {
                                     currentDirectory.contents.push({ name: dirName, contents: [], type: "dir" });
                                     output += `Directory '${dirName}' created` + "\n";
                                 }
+                                localStorage.current_dir = JSON.stringify(current_dir);
+                                localStorage.file_dir = JSON.stringify(file_dir);
                             }
                         } else if (base_command === "ls") {
                             let currentDirectory = file_dir["/"];
@@ -423,6 +431,8 @@ function getOSDetails() {
                                         output += `error: Directory '${dirName}' does not exist` + "\n";
                                     }
                                 }
+                                localStorage.current_dir = JSON.stringify(current_dir);
+                                localStorage.file_dir = JSON.stringify(file_dir);
                             }
                         }else if (base_command === "read") {
                             if (program.split(" ").length > 2 || program.split(" ").length <= 1){
@@ -505,6 +515,8 @@ function getOSDetails() {
                                 } else {
                                     output += `File '${program.split(" ")[program.split(" ").length - 1]}' updated` + "\n";
                                 }
+                                localStorage.current_dir = JSON.stringify(current_dir);
+                                localStorage.file_dir = JSON.stringify(file_dir);
                             }else {
                                 output = RunCommand(base_command, program);
                             };
