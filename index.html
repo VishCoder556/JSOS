@@ -455,6 +455,8 @@ function getOSDetails() {
                             
                         }else if (base_command === "clear") {
                             document.getElementById("Terminal"+winNum+"Id").value = "";
+                        }else {
+                            output += `error: unknown command ${base_command}\n`;
                         }
                         return output;
     };
