@@ -297,7 +297,7 @@ function getOSDetails() {
         for (const part of parts) {
             // Check if the part is a quoted string
             if (part.startsWith('"') && part.endsWith('"')) {
-                output.push(part.slice(1, -1)); // Remove the quotes
+                output.push(part.slice(1, -1).replace("\\n", "\n").replace("\\t", "\t")); // Remove the quotes
             } else if (part.includes("+") || part.includes("-") || part.includes("*") || part.includes("/")){
                 // Try to evaluate the part as an expression
                 let evaluated;
