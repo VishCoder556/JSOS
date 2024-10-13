@@ -22,6 +22,10 @@
 <span id="games" hidden>
     <img id="Sudoku" width="200" height="220" src="assets/games/Sudoku/icon.png" hidden>
 </span>
+<video width="400" height="320" controls id="HiGuys" hidden>
+    <source src="assets/videos/HiGuys.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>  
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
     <div id="List"></div>
@@ -326,7 +330,26 @@ function getOSDetails() {
         file_dir = JSON.parse(localStorage.file_dir);
     };
 
+function PauseButton(){
+    createOnClickButton(0, canvas.height - 100, 40, 40, "⏸", ()=>{
+        document.getElementById("HiGuys").pause();
+        createOnClickButton(0, canvas.height - 100, 40, 40, "▶", ()=>{
+            document.getElementById("HiGuys").play();
+            PauseButton();
+        }, "rgba(0, 0, 0, 0)");
+    }, "rgba(0, 0, 0, 0)");
+};
+    
+function drawVideo() {
+    if (document.getElementById("HiGuys").ended) return;
+    ctx.drawImage(document.getElementById("HiGuys"), 0, 70, 1449, 690);
+    PauseButton();
+    requestAnimationFrame(drawVideo);
+}
 
+function drawFirstFrame() {
+    ctx.drawImage(document.getElementById("HiGuys"), 0, 70, 1449, 690);
+}
     function RunCommand(base_command, program){ // Sorry for weird indentation
                         output = "";
                         if (base_command == "man" || base_command == "help"){
@@ -469,6 +492,14 @@ function getOSDetails() {
                             document.getElementById("Terminal"+winNum+"Id").value = "";
                         }else if (base_command === "rizz") {
                             output += "This is an epic operating system. Of course it has W rizz.\n";
+                        }else if(base_command == "higuys"){
+                                console.log("ME");
+                                document.getElementById(0+"Div").remove();
+                                // 0, 40, 1449, 710
+                                drawFirstFrame();
+                                createOnClickButton(0, canvas.height - 100, 40, 40, "▶", ()=>{
+                                    document.getElementById("HiGuys").play();drawVideo();
+                                }, "rgba(0, 0, 0, 0)");
                         }else {
                             output += `error: unknown command ${base_command}\n`;
                         }
