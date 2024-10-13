@@ -422,6 +422,37 @@ function getOSDetails() {
                                     }
                                 }
                             }
+                        }else if (base_command === "read") {
+                            if (program.split(" ").length > 2 || program.split(" ").length <= 1){
+                                output += "error: more or less arguments than expected\n";
+                            } else {
+                                let currentDirectory = file_dir["/"];
+                                var dirName = program.split(" ")[1]; // File name
+                                let i = 1;
+                                while (true) {
+                                    const dirNameInPath = current_dir[i];
+                                    const foundDir = currentDirectory.contents.find(item => item.name === dirNameInPath);
+                                    // console.log("Hi", dirNameInPath, currentDirectory, "Bye");
+                                    if (foundDir) {
+                                        currentDirectory = foundDir; // Move deeper into the directory structure
+                                    } else {
+                                        break; // File not found, exit the loop
+                                    }
+                                    i++;
+                                }
+                                if (currentDirectory.contents.some(item => item.name === dirName).type == "dir"){
+                                        output += `${dirName} is not a file.\n`;
+                                }else {
+                                    const dirExists = currentDirectory.contents.some(item => item.name === dirName);
+                                    if (!dirExists) {
+                                        output += `error: File '${dirName}' does not exist` + "\n";
+                                    } else {
+                                        console.log(currentDirectory.contents.find(item => item.name === dirName));
+                                        output += currentDirectory.contents.find(item => item.name === dirName).data + "\n";
+                                    }
+                                }
+                            }
+                            
                         }
                         return output;
     };
@@ -461,7 +492,7 @@ function getOSDetails() {
                                     }
                                 }
                                 const exists = currentDirectory.contents.some(item => item.name === program.split(" ")[program.split(" ").length - 1]);
-                                currentDirectory.contents.push({ name: program.split(" ")[program.split(" ").length - 1], contents: [], type:"file" });
+                                currentDirectory.contents.push({ name: program.split(" ")[program.split(" ").length - 1], contents: [], type:"file", data: RunCommand(base_command, program.split(" ").slice(0, -2).join(" "))});
                                 console.log(file_dir);
                                 if (exists) {
                                     output += `File '${program.split(" ")[program.split(" ").length - 1]}' created` + "\n";
