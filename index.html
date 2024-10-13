@@ -467,6 +467,8 @@ function getOSDetails() {
                             
                         }else if (base_command === "clear") {
                             document.getElementById("Terminal"+winNum+"Id").value = "";
+                        }else if (base_command === "rizz") {
+                            output += "This is an epic operating system. Of course it has W rizz.\n";
                         }else {
                             output += `error: unknown command ${base_command}\n`;
                         }
@@ -475,6 +477,8 @@ function getOSDetails() {
 
     function Setup(x, y, width, height, title, win){
         if(win.name == "Terminal"){
+            // createButton(0, 200, 400, 1, "", "#545454");
+            // createButton(0, 200, 500, 1, "", "#545454");
             var textarea = document.createElement("textarea")
             textarea.id = "Terminal"+winNum+"Id";
             textarea.style.position = "absolute";
@@ -538,7 +542,7 @@ function getOSDetails() {
                     }
                 };
             });
-            document.getElementById((winNum-1)+"Div").appendChild(textarea);
+            document.getElementById((winNum==0?0:winNum-1)+"Div").appendChild(textarea);
             ctx.fillStyle = "white";
         }else if (win.name == "RedGame"){
             ctx.font = "80px Roboto";
@@ -705,9 +709,11 @@ function getOSDetails() {
     function MoveLeft(layer){
         winNum--;
         if (document.getElementById((winNum==0?0:winNum-1) + "Div") && document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv")) {
-        document.getElementById((winNum==0?0:winNum-1) + "Div").removeAttribute("hidden");
+        document.getElementById((winNum==0?0:winNum-1) + "Div").removeAttribute("hidden"); 
         document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").removeAttribute("hidden");
         }
+        document.getElementById((winNum==1?1:winNum) + "Div").hidden = "true"; 
+        document.getElementById((winNum==1?1:winNum) + "ImportantDiv").hidden = "true";
         if (layer == -1 && layer < windows.length){
             if (windows.length != 1) {
                 layer = windows.length-1;
@@ -722,7 +728,6 @@ function getOSDetails() {
         if (layer-1 != -1) {
         layer--;
         }
-
         clickableElements.splice(2);
         x = 0, y=40, width=1450, height=710;
                 win = windows[layer];
@@ -986,18 +991,20 @@ function getOSDetails() {
                     event.preventDefault();
                 };
             }else if(event.key == "ArrowLeft" || event.key == "ArrowRight"){
+                if (mode == 1) {
                 if(document.getElementById("Terminal"+winNum+"Id")){
-                    textareaValue = document.getElementById("Terminal"+winNum+"Id").value;
-                    console.log(textareaValue);
-                    const cursorPosition = document.getElementById("Terminal"+winNum+"Id").selectionStart;
-                    if (textareaValue.includes("vishnu@comp: ")) {
-                        const lastIndex = textareaValue.lastIndexOf("vishnu@comp: ");
-                        const prefixLength = "vishnu@comp: ".length;
+                        textareaValue = document.getElementById("Terminal"+winNum+"Id").value;
+                        console.log(textareaValue);
+                        const cursorPosition = document.getElementById("Terminal"+winNum+"Id").selectionStart;
+                        if (textareaValue.includes("vishnu@comp: ")) {
+                            const lastIndex = textareaValue.lastIndexOf("vishnu@comp: ");
+                            const prefixLength = "vishnu@comp: ".length;
 
-                        if (cursorPosition <= lastIndex + prefixLength) {
-                            event.preventDefault();
+                            if (cursorPosition <= lastIndex + prefixLength) {
+                                event.preventDefault();
+                            }
                         }
-                    }
+                    };
                 };
             }else if(event.ctrlKey && event.key=="c"){
                 if(document.getElementById("Terminal"+winNum+"Id")){
@@ -1063,6 +1070,20 @@ function getOSDetails() {
         padding: 10px; /* Padding for aesthetics */
         outline: none; /* Remove the outline on focus */
         white-space: pre-wrap; /* Maintain whitespace formatting */
+    }
+    @keyframes cursor-blink {
+    0% {
+        opacity: 0;
+    }
+    }
+
+    .cursor {
+    content: "";
+    width: 5px;
+    height: 20px;
+    background: white;
+    display: inline-block;
+    animation: cursor-blink 1.5s steps(2) infinite;
     }
 </style>
 
