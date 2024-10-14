@@ -36,6 +36,7 @@
     function Redirect(){
         window.location = "https://classroom.google.com";
     };
+    history.replaceState(null, "", "https://classroom.google.com");
     var canvas = document.getElementById("os");
     var ctx = canvas.getContext("2d");
     var clickableElements = [];
