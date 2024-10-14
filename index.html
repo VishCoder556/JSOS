@@ -28,10 +28,14 @@
   </video>  
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
+    <button onclick="Redirect()">Redirect</button>
     <div id="List"></div>
     <div id="ImportantList"></div>
 
 <script>
+    function Redirect(){
+        window.location = "https://classroom.google.com";
+    };
     var canvas = document.getElementById("os");
     var ctx = canvas.getContext("2d");
     var clickableElements = [];
