@@ -28,7 +28,7 @@
   </video>  
 <canvas id="os" width="1450" height="789" tabindex='1'>
     Your browser does not support the HTML canvas tag.</canvas>
-    <button onclick="Redirect()">Redirect</button>
+    <br><button onclick="Redirect()">Redirect</button>
     <div id="List"></div>
     <div id="ImportantList"></div>
 
@@ -1110,19 +1110,16 @@ function drawFirstFrame() {
         outline: none; /* Remove the outline on focus */
         white-space: pre-wrap; /* Maintain whitespace formatting */
     }
-    @keyframes cursor-blink {
-    0% {
-        opacity: 0;
-    }
-    }
+    button {
+        background-color: #04AA6D; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
 
-    .cursor {
-    content: "";
-    width: 5px;
-    height: 20px;
-    background: white;
-    display: inline-block;
-    animation: cursor-blink 1.5s steps(2) infinite;
     }
 </style>
 
