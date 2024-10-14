@@ -11,6 +11,9 @@
 <img id="login" width="200" height="220" src="assets/login.png" hidden>
 <img id="settings" width="200" height="220" src="assets/settings.png" hidden>
 <img id="terminal" width="200" height="220" src="assets/terminal.png" hidden>
+<img id="file_explorer" width="200" height="220" src="assets/file_explorer.png" hidden>
+<img id="file" width="200" height="220" src="assets/file.png" hidden>
+<img id="folder" width="200" height="220" src="assets/folder.png" hidden>
 <span id="landscapes" hidden>
     <img id="L1" width="200" height="220" src="assets/landscapes/1.jpeg" hidden>
     <img id="L2" width="200" height="220" src="assets/landscapes/2.jpeg" hidden>
@@ -327,11 +330,6 @@ function getOSDetails() {
         type: "dir"
     }};
     var current_dir = ["/"];
-    if (localStorage.current_dir){
-        current_dir = JSON.parse(localStorage.current_dir);
-    }else if (localStorage.file_dir){
-        file_dir = JSON.parse(localStorage.file_dir);
-    };
 
 function PauseButton(){
     createOnClickButton(0, canvas.height - 100, 40, 40, "⏸", ()=>{
@@ -378,15 +376,14 @@ function drawFirstFrame() {
                             } else {
                                 // Get the current directory object based on the current_dir array
                                 let currentDirectory = file_dir["/"];
-                                console.log(file_dir);
-                                let i = 0;
+                                let i = 1;
                                 while (true) {
                                     const dirNameInPath = current_dir[i];
                                     const foundDir = currentDirectory.contents.find(item => item.name === dirNameInPath);
                                     if (foundDir) {
-                                        currentDirectory = foundDir; // Move deeper into the directory structure
+                                        currentDirectory = foundDir;
                                     } else {
-                                        break; // Directory not found, exit the loop
+                                        break;
                                     }
                                     i++;
                                 }
@@ -396,12 +393,9 @@ function drawFirstFrame() {
                                 if (exists) {
                                     output += `error: Directory '${dirName}' already exists` + "\n";
                                 } else {
-                                    // Add new directory with empty contents
                                     currentDirectory.contents.push({ name: dirName, contents: [], type: "dir" });
                                     output += `Directory '${dirName}' created` + "\n";
                                 }
-                                localStorage.current_dir = JSON.stringify(current_dir);
-                                localStorage.file_dir = JSON.stringify(file_dir);
                             }
                         } else if (base_command === "ls") {
                             let currentDirectory = file_dir["/"];
@@ -426,7 +420,7 @@ function drawFirstFrame() {
                             }
                         } else if (base_command === "cd") {
                             const dirName = program.split(" ")[1];
-
+                            
                             if (!dirName) {
                                 output += "error: Must provide a name for the directory" + "\n";
                             } else if(dirName == "../"){
@@ -434,19 +428,19 @@ function drawFirstFrame() {
                             }else {
                                 let currentDirectory = file_dir["/"];
                                 let i = 1;
-                                console.log(current_dir);
                                 while (true) {
                                     const dirNameInPath = current_dir[i];
                                     const foundDir = currentDirectory.contents.find(item => item.name === dirNameInPath);
-                                    // console.log("Hi", dirNameInPath, currentDirectory, "Bye");
                                     if (foundDir) {
-                                        currentDirectory = foundDir; // Move deeper into the directory structure
+                                        if (foundDir.contents.find(item => item.name === current_dir[i+1])) {
+                                            currentDirectory = foundDir;
+                                        };
                                     } else {
-                                        break; // Directory not found, exit the loop
+                                        break;
                                     }
                                     i++;
                                 }
-                                if (currentDirectory.contents.find(item => item.name === dirName).type != "dir"){
+                                if (currentDirectory.type != "dir"){
                                     output += `${dirName} is not a directory.\n`;
                                 }else {
                                     const dirExists = currentDirectory.contents.some(item => item.name === dirName);
@@ -457,8 +451,6 @@ function drawFirstFrame() {
                                         output += `error: Directory '${dirName}' does not exist` + "\n";
                                     }
                                 }
-                                localStorage.current_dir = JSON.stringify(current_dir);
-                                localStorage.file_dir = JSON.stringify(file_dir);
                             }
                         }else if (base_command === "read") {
                             if (program.split(" ").length > 2 || program.split(" ").length <= 1){
@@ -508,6 +500,55 @@ function drawFirstFrame() {
                         }
                         return output;
     };
+    let OriginalClickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":160,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":220,\"y\":747,\"width\":40,\"height\":40,\"code\":2},{\"x\":270,\"y\":750,\"width\":36,\"height\":36,\"code\":3},{\"x\":320,\"y\":750,\"width\":36,\"height\":36,\"code\":4},{\"x\":370,\"y\":750,\"width\":45,\"height\":36,\"code\":5}]");
+    OriginalClickableElements[0].functionOnClicked = (event) => {
+        console.log("Opening the time");
+    };
+    OriginalClickableElements[1].functionOnClicked = (event) => {
+        Game("RedGame");
+    };
+    OriginalClickableElements[2].functionOnClicked = (event) => {
+        Game("Login");
+    };
+    OriginalClickableElements[3].functionOnClicked = (event) => {
+        Game("Settings");
+    };
+    OriginalClickableElements[4].functionOnClicked = (event) => {
+        Game("Terminal");
+    };
+    OriginalClickableElements[5].functionOnClicked = (event) => {
+        Game("Files");
+    };
+
+    function DrawItem(x,y , width, height, item, py, recursion=false){
+        console.log(OriginalClickableElements);
+        clickableElements = [...OriginalClickableElements];
+        if (item.type == "dir"){
+            ctx.drawImage(document.getElementById("folder"), x+20, y+40+py, 40, 40);
+            createOnClickButton(x+20, y+40+py, 40+ctx.measureText(item.name).width, 40, "", ()=>{
+                ctx.clearRect(x+1, y+80, 1448, 630);
+                location1 += item.name + "/";
+                ctx.fillStyle = "gray";
+                ctx.fillRect(x, y+30, width, 50);
+                ctx.fillStyle = "black";
+                ctx.font = "40px Roboto";
+                ctx.fillText(location1, x+20, y+70);
+                newPy = 40;
+                item.contents.forEach((item1) => {
+                    newPy = DrawItem(x, y, width, height, item1, newPy, true);
+                });
+                if (recursion == true){
+                    clickableElements = [...OriginalClickableElements];
+                };
+            }, "rgba(0, 0, 0, 0)");
+        }else if(item.type == "file"){
+            ctx.drawImage(document.getElementById("file"), x+20, y+40+py, 40, 40);
+            oldPy = py;
+        };
+        ctx.fillText(item.name, x+60, y+70+py);
+        py+=40;
+        return py;
+    };
 
     function Setup(x, y, width, height, title, win){
         if(win.name == "Terminal"){
@@ -531,7 +572,7 @@ function drawFirstFrame() {
                     base_command = program.split(" ")[0];
                     textarea.value += "\n";
                     var output = "";
-                    try {
+                    // try {
                         if (program.split(" ").length > 3){
                             if (program.split(" ")[program.split(" ").length - 2] == "<"){
                                 let currentDirectory = file_dir["/"];
@@ -553,17 +594,15 @@ function drawFirstFrame() {
                                 } else {
                                     output += `File '${program.split(" ")[program.split(" ").length - 1]}' updated` + "\n";
                                 }
-                                localStorage.current_dir = JSON.stringify(current_dir);
-                                localStorage.file_dir = JSON.stringify(file_dir);
                             }else {
                                 output = RunCommand(base_command, program);
                             };
                         }else {;
                             output = RunCommand(base_command, program);
                         }
-                    } catch (e){
-                        output += "error: " + e.message+"\n";
-                    }
+                    // } catch (e){
+                    //     output += "error: " + e.message+"\n";
+                    // }
                     textarea.value += output;
                     if (output[output.length] == "\n") {
                     textarea.value += "\n";
@@ -740,6 +779,19 @@ function drawFirstFrame() {
                 console.log(getOSDetails());
                 ctx.fillText((language=="English"?"Running on ":"உங்கள் கணினி ") + getOSDetails(), x+310, y+500);
             });
+        }else if(win.name == "Files"){
+            location1 = "/";
+            ctx.fillStyle = "gray";
+            ctx.fillRect(x, y+30, width, 50);
+            ctx.fillStyle = "black";
+            ctx.font = "40px Roboto";
+            ctx.fillText(location1, x+20, y+70);
+            text = "";
+            console.log(win); // file_dir["/"]
+            py = 40;
+            file_dir["/"].contents.forEach((item) => {
+                py = DrawItem(x, y, width, height, item, py);
+            });
         };
     };
     function MoveLeft(layer){
@@ -855,23 +907,7 @@ function drawFirstFrame() {
             document.getElementById((winNum==0?0:winNum-1) + "ImportantDiv").hidden = "true";
         }
         winNum++;
-        console.log(JSON.stringify(clickableElements));
-        clickableElements = JSON.parse("[{\"x\":0,\"y\":740,\"width\":110,\"height\":50,\"code\":0},{\"x\":160,\"y\":743,\"width\":48,\"height\":48,\"code\":1},{\"x\":220,\"y\":747,\"width\":40,\"height\":40,\"code\":2},{\"x\":270,\"y\":750,\"width\":36,\"height\":36,\"code\":3},{\"x\":320,\"y\":750,\"width\":36,\"height\":36,\"code\":4}]");
-        clickableElements[0].functionOnClicked = (event) => {
-            console.log("Opening the time");
-        };
-        clickableElements[1].functionOnClicked = (event) => {
-            Game("RedGame");
-        };
-        clickableElements[2].functionOnClicked = (event) => {
-            Game("Login");
-        };
-        clickableElements[3].functionOnClicked = (event) => {
-            Game("Settings");
-        };
-        clickableElements[4].functionOnClicked = (event) => {
-            Game("Terminal");
-        };
+        clickableElements = [...OriginalClickableElements];
         if (!document.getElementById(win.id+"Div")) {
             span = document.createElement("span");
             span.id = win.id+"Div";
@@ -1097,6 +1133,12 @@ function drawFirstFrame() {
             ctx.drawImage(document.getElementById("terminal"), 320, 750, 36, 36);
             createClick(320, 750, 36, 36, ()=>{
                 Game("Terminal");
+            });
+        })
+        document.getElementById("file_explorer").addEventListener("load", (e) => {
+            ctx.drawImage(document.getElementById("file_explorer"), 370, 750, 45, 36);
+            createClick(370, 750, 45, 36, ()=>{
+                Game("Files");
             });
         })
     }
