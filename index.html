@@ -520,9 +520,30 @@ function drawFirstFrame() {
         Game("Files");
     };
 
-    function DrawItem(x,y , width, height, item, py, recursion=false){
-        console.log(OriginalClickableElements);
+    function ReDraw(win){
+        let x=0, y=40, width=1450, height=710;
+        createClick(x+width-90, y, 10, 30, ()=>{
+            if (layer == 0){
+                layer = MoveRight(win.layer);
+            }else {
+                layer = MoveLeft(win.layer);
+            };
+        });
+        createClick(x+width-30, y, 10, 30, ()=>{
+            CloseWindow(win, x, y, width, height);
+        });
+        createClick(x+width-60, y, 10, 30, ()=>{
+            console.log("BOX");
+        });
+    };
+
+    function ResetClickElems(){
         clickableElements = [...OriginalClickableElements];
+        ReDraw(windows[(winNum==0?0:winNum-1)]);
+    };
+
+    function DrawItem(x,y , width, height, item, py, recursion=false){
+        ResetClickElems();
         if (item.type == "dir"){
             ctx.drawImage(document.getElementById("folder"), x+20, y+40+py, 40, 40);
             createOnClickButton(x+20, y+40+py, 40+ctx.measureText(item.name).width, 40, "", ()=>{
@@ -537,7 +558,7 @@ function drawFirstFrame() {
                 item.contents.forEach((item1) => {
                     newPy = DrawItem(x, y, width, height, item1, newPy, true);
                 });
-                clickableElements = [...OriginalClickableElements];
+                ResetClickElems();
             }, "rgba(0, 0, 0, 0)");
         }else if(item.type == "file"){
             ctx.drawImage(document.getElementById("file"), x+20, y+40+py, 40, 40);
