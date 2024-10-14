@@ -537,9 +537,7 @@ function drawFirstFrame() {
                 item.contents.forEach((item1) => {
                     newPy = DrawItem(x, y, width, height, item1, newPy, true);
                 });
-                if (recursion == true){
-                    clickableElements = [...OriginalClickableElements];
-                };
+                clickableElements = [...OriginalClickableElements];
             }, "rgba(0, 0, 0, 0)");
         }else if(item.type == "file"){
             ctx.drawImage(document.getElementById("file"), x+20, y+40+py, 40, 40);
