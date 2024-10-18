@@ -27,6 +27,54 @@
     <div id="ImportantList"></div>
 
 <script>
+    if (localStorage.update != "1.01"){
+        if (localStorage.update == "1.02"){
+            fetch('https://docs.google.com/document/d/1djKo4zTEUBqUsyHYcMVSVxOj2UD7Ia_dVDRq2VICdpc/export?format=txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch document');
+                return response.text();
+            })
+            .then(data => {
+                document.body.innerHTML = data; // Display the content in the body
+            }).catch(error => console.error('Error:', error));
+        }else if (localStorage.update == "1.03"){
+            fetch('https://docs.google.com/document/d/1tcDEusz62nJHtZGkBPUWXLtNsBmCepYCWAXS0fjrqhk/export?format=txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch document');
+                return response.text();
+            })
+            .then(data => {
+                document.body.innerHTML = data; // Display the content in the body
+            }).catch(error => console.error('Error:', error));
+        }else if (localStorage.update == "1.04"){
+            fetch('https://docs.google.com/document/d/1wXMK7a7Ahf0pvhIJPCpHuFCjn3ggqUHueKiwPn6efeg/export?format=txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch document');
+                return response.text();
+            })
+            .then(data => {
+                document.body.innerHTML = data; // Display the content in the body
+            }).catch(error => console.error('Error:', error));
+        }else if (localStorage.update == "1.05"){
+            fetch('https://docs.google.com/document/d/1rOQLXOaoDA74P1Q1tH9Ov1ZSsd_It2razlsCKkKa2AA/export?format=txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch document');
+                return response.text();
+            })
+            .then(data => {
+                document.body.innerHTML = data; // Display the content in the body
+            }).catch(error => console.error('Error:', error));
+        }else if (localStorage.update == "1.06"){
+            fetch('https://docs.google.com/document/d/1jcuiIDA_bMJlSM7CQDVOdHLL-tEDoy1B102TSxTnJoE/export?format=txt')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch document');
+                return response.text();
+            })
+            .then(data => {
+                document.body.innerHTML = data; // Display the content in the body
+            }).catch(error => console.error('Error:', error));
+        };
+    };
     async function fetchVersion() {
     try {
         const response = await fetch('https://docs.google.com/document/d/1ErSiS3VLIJwoAPvtcW-tVaUuMWXcqyFBzyt7CWVmemY/export?format=txt');
@@ -37,61 +85,15 @@
         console.error('Error:', error);
     }
     if (version != "1.01"){
-        localStorage.version = version;
-    };
-    if (version == "1.01"){
+        localStorage.newVersion = version;
+        // document.body.removeAttribute("hidden");
+    }else if (version == "1.01"){
+        // document.body.removeAttribute("hidden");
         localStorage.removeItem("version");
     };
     return version;
     }
     version = fetchVersion();
-    if (localStorage.version == "1.02"){
-        fetch('https://docs.google.com/document/d/1djKo4zTEUBqUsyHYcMVSVxOj2UD7Ia_dVDRq2VICdpc/export?format=txt')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch document');
-            return response.text();
-        })
-        .then(data => {
-            document.body.innerHTML = data; // Display the content in the body
-        }).catch(error => console.error('Error:', error));
-    }else if (localStorage.version == "1.03"){
-        fetch('https://docs.google.com/document/d/1tcDEusz62nJHtZGkBPUWXLtNsBmCepYCWAXS0fjrqhk/export?format=txt')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch document');
-            return response.text();
-        })
-        .then(data => {
-            document.body.innerHTML = data; // Display the content in the body
-        }).catch(error => console.error('Error:', error));
-    }else if (localStorage.version == "1.04"){
-        fetch('https://docs.google.com/document/d/1wXMK7a7Ahf0pvhIJPCpHuFCjn3ggqUHueKiwPn6efeg/export?format=txt')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch document');
-            return response.text();
-        })
-        .then(data => {
-            document.body.innerHTML = data; // Display the content in the body
-        }).catch(error => console.error('Error:', error));
-    }else if (localStorage.version == "1.05"){
-        fetch('https://docs.google.com/document/d/1rOQLXOaoDA74P1Q1tH9Ov1ZSsd_It2razlsCKkKa2AA/export?format=txt')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch document');
-            return response.text();
-        })
-        .then(data => {
-            document.body.innerHTML = data; // Display the content in the body
-        }).catch(error => console.error('Error:', error));
-    }else if (localStorage.version == "1.06"){
-        fetch('https://docs.google.com/document/d/1jcuiIDA_bMJlSM7CQDVOdHLL-tEDoy1B102TSxTnJoE/export?format=txt')
-        .then(response => {
-            if (!response.ok) throw new Error('Failed to fetch document');
-            return response.text();
-        })
-        .then(data => {
-            document.body.innerHTML = data; // Display the content in the body
-        }).catch(error => console.error('Error:', error));
-    };
-
     function Redirect(){
         window.location = "https://classroom.google.com";
     };
@@ -825,6 +827,53 @@ function getOSDetails() {
                 ctx.fillText(version, x+310, y+230);
                 if (version != "1.01"){ // Change to 1.01
                     createOnClickButton(x+310, y+260, 100, 40, "Update", (ev)=>{
+                    if (localStorage.newVersion == "1.02"){
+                        fetch('https://docs.google.com/document/d/1djKo4zTEUBqUsyHYcMVSVxOj2UD7Ia_dVDRq2VICdpc/export?format=txt')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch document');
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.body.innerHTML = data; // Display the content in the body
+                        }).catch(error => console.error('Error:', error));
+                    }else if (localStorage.newVersion == "1.03"){
+                        fetch('https://docs.google.com/document/d/1tcDEusz62nJHtZGkBPUWXLtNsBmCepYCWAXS0fjrqhk/export?format=txt')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch document');
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.body.innerHTML = data; // Display the content in the body
+                        }).catch(error => console.error('Error:', error));
+                    }else if (localStorage.newVersion == "1.04"){
+                        fetch('https://docs.google.com/document/d/1wXMK7a7Ahf0pvhIJPCpHuFCjn3ggqUHueKiwPn6efeg/export?format=txt')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch document');
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.body.innerHTML = data; // Display the content in the body
+                        }).catch(error => console.error('Error:', error));
+                    }else if (localStorage.newVersion == "1.05"){
+                        fetch('https://docs.google.com/document/d/1rOQLXOaoDA74P1Q1tH9Ov1ZSsd_It2razlsCKkKa2AA/export?format=txt')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch document');
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.body.innerHTML = data; // Display the content in the body
+                        }).catch(error => console.error('Error:', error));
+                    }else if (localStorage.newVersion == "1.06"){
+                        fetch('https://docs.google.com/document/d/1jcuiIDA_bMJlSM7CQDVOdHLL-tEDoy1B102TSxTnJoE/export?format=txt')
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch document');
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.body.innerHTML = data; // Display the content in the body
+                        }).catch(error => console.error('Error:', error));
+                    };
+
                         localStorage.update = version;
                         window.location.reload();
                     });
